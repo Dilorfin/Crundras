@@ -1,0 +1,33 @@
+_Program = {Statement}.
+
+Statement = InputStatement | OutputStatement | CompoundStatement | ExpressionStatement | SelectionStatement | IterationStatement | DeclarationStatement.
+ExpressionStatement = Expression ';'.
+SelectionStatement = "if" '('RelationalExpression')' Statement.
+IterationStatement = "for" AssigmentExpression "to" Expression "by" Expression "while" '(' RelationalExpression ')' Statement "rof" ';'.
+CompoundStatement = '{' {Statement} '}'.
+DeclarationStatement = TypeSpecifier Identifier ';'.
+
+Expression = '(' Expression ')'| PrimaryExpression | ArithmeticExpression | AssigmentExpression | UnaryExpression | RelationalExpression.
+PrimaryExpression = Literal | Identifier.
+UnaryExpression = [Sign] PrimaryExpression.
+RelationalExpression = Expression RelationalOperator Expression.
+ArithmeticExpression = Expression ArithmeticOperator Expression.
+AssigmentExpression = Identifier '=' Expression.
+
+InputStatement = '$' Identifier ';'.
+OutputStatement = '@' Expression ';'.
+
+TypeSpecifier = "int" | "float".
+
+Identifier = Letter {Letter | Digit}.
+
+Literal = IntegerLiteral | FloatingLiteral.
+IntegerLiteral = Digit {Digit}.
+FloatingLiteral = IntegerLiteral '.' [IntegerLiteral] | '.'[IntegerLiteral].
+
+Letter = 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k' | 'l' | 'm' | 'n' | 'o' | 'p' | 'q' | 'r' | 's' | 't' | 'u' | 'v' | 'w' | 'x' | 'y' | 'z'.
+Digit = '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'. 
+
+Sign = '+' | '-'.
+ArithmeticOperator = '+' | '-' | '*' | "**" | '/' | '%'.
+RelationalOperator = '<' | '>' | "<=" | ">=" | "==" | "!=".
