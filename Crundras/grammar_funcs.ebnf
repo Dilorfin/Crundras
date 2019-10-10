@@ -1,11 +1,16 @@
-_Program = {Statement}.
+_Program = {FunctionDeclaration}.
 
 Statement = InputStatement | OutputStatement | CompoundStatement | ExpressionStatement | SelectionStatement | IterationStatement | DeclarationStatement.
 ExpressionStatement = Expression ';'.
 SelectionStatement = "if" '('RelationalExpression')' Statement.
-IterationStatement = "for" AssigmentExpression "to" Expression "by" Expression "while" '(' Expression ')' Statement "rof" ';'.
+IterationStatement = "for" AssigmentExpression "to" Expression "by" Expression "while" '(' RelationalExpression ')' Statement "rof" ';'.
 CompoundStatement = '{' {Statement} '}'.
 DeclarationStatement = TypeSpecifier Identifier ';'.
+
+FunctionIdentifer = Identifier.
+FunctionDeclaration = TypeSpecifier FunctionIdentifer '(' [TypeSpecifier Identifier{',' TypeSpecifier Identifier}] ')' '{' {Statement} '}'.
+JumpStatement = "return" Expression ';'.
+FunctionCallExpression = FunctionIdentifer '(' [Expression {',' Expression}] ')'.
 
 Expression = '(' Expression ')'| PrimaryExpression | ArithmeticExpression | AssigmentExpression | UnaryExpression | RelationalExpression.
 PrimaryExpression = Literal | Identifier.
@@ -13,9 +18,6 @@ UnaryExpression = [Sign] PrimaryExpression.
 RelationalExpression = Expression RelationalOperator Expression.
 ArithmeticExpression = Expression ArithmeticOperator Expression.
 AssigmentExpression = Identifier '=' Expression.
-
-InputStatement = '$' Identifier ';'.
-OutputStatement = '@' Expression ';'.
 
 TypeSpecifier = "int" | "float".
 
