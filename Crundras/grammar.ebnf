@@ -2,7 +2,7 @@ _Program = {Statement}.
 
 Statement = InputStatement | OutputStatement | CompoundStatement | ExpressionStatement | SelectionStatement | IterationStatement | DeclarationStatement.
 ExpressionStatement = Expression ';'.
-SelectionStatement = "if" '('RelationalExpression')' Statement.
+SelectionStatement = "if" '('Expression')' Statement.
 IterationStatement = "for" AssigmentExpression "to" Expression "by" Expression "while" '(' Expression ')' Statement "rof" ';'.
 CompoundStatement = '{' {Statement} '}'.
 DeclarationStatement = TypeSpecifier Identifier ';'.
