@@ -2,8 +2,8 @@ _Program = {Statement}.
 
 Statement = InputStatement | OutputStatement | CompoundStatement | ExpressionStatement | SelectionStatement | IterationStatement | DeclarationStatement.
 ExpressionStatement = Expression ';'.
-SelectionStatement = "if" '('RelationalExpression')' Statement.
-IterationStatement = "for" AssigmentExpression "to" Expression "by" Expression "while" '(' RelationalExpression ')' Statement "rof" ';'.
+SelectionStatement = "if" '('Expression')' Statement.
+IterationStatement = "for" AssigmentExpression "to" Expression "by" Expression "while" '(' Expression ')' Statement "rof" ';'.
 CompoundStatement = '{' {Statement} '}'.
 DeclarationStatement = TypeSpecifier Identifier ';'.
 
@@ -25,7 +25,7 @@ Literal = IntegerLiteral | FloatingLiteral.
 IntegerLiteral = Digit {Digit}.
 FloatingLiteral = IntegerLiteral '.' [IntegerLiteral] | '.'[IntegerLiteral].
 
-Letter = 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k' | 'l' | 'm' | 'n' | 'o' | 'p' | 'q' | 'r' | 's' | 't' | 'u' | 'v' | 'w' | 'x' | 'y' | 'z'.
+Letter = 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k' | 'l' | 'm' | 'n' | 'o' | 'p' | 'q' | 'r' | 's' | 't' | 'u' | 'v' | 'w' | 'x' | 'y' | 'z' | 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' | 'V' | 'W' | 'X' | 'Y'.
 Digit = '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'. 
 
 Sign = '+' | '-'.
