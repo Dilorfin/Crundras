@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Lexical_Analyzer
+namespace LexicalAnalyzer
 {
     class Program
     {
@@ -37,8 +37,6 @@ namespace Lexical_Analyzer
             {
                 Console.WriteLine(e.Message);
             }
-
-            Console.ReadKey();
         }
     }
 }

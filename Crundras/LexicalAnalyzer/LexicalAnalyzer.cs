@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Lexical_Analyzer
+namespace LexicalAnalyzer
 {
-    class LexicalAnalyzer
+    public class LexicalAnalyzer
     {
         private StateMachine stateMachine = new StateMachine();
         private TokenTable tokenTable = new TokenTable();
@@ -15,32 +14,39 @@ namespace Lexical_Analyzer
 
         public TokenTable Analyze(string fileName)
         {
-            using StreamReader file = new StreamReader(fileName, true);
+            using var file = new StreamReader(fileName, true);
             
             StringBuilder builder = new StringBuilder();
 
             while (!file.EndOfStream)
             {
+                // looking throw next character
                 char nextChar = (char) file.Peek();
 
                 int charClass = GetCharClass(nextChar);
+                // transiting state machine to next state
                 stateMachine.NextState(charClass);
 
+                // checking if error has occurred
                 CheckError(stateMachine.CurrentState, nextChar, line);
 
+                // counting lines
                 if (nextChar == '\n') 
                     line++;
 
+                // checking for '*' states
                 if (stateMachine.CurrentState.TakeCharacter)
                 {
                     builder.Append((char) file.Read());
                 }
+                // adding lexeme to table in final state
                 if (stateMachine.CurrentState.IsFinal)
                 {
                     AddLexeme(builder.ToString());
                     builder.Clear();
                 }
 
+                // clearing builder at 0 state, needed in case of self transiting
                 if (stateMachine.CurrentState.Id == 0)
                 {
                     builder.Clear();

@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace Lexical_Analyzer
+namespace LexicalAnalyzer
 {
-    class TokenTable
+    public class TokenTable
     {
         public static readonly Dictionary<string, uint> codesTable = new Dictionary<string, uint>
         {
@@ -51,13 +51,9 @@ namespace Lexical_Analyzer
 
         public void AddToken(uint line, string lexeme, int stateId)
         {
-            Token token = new Token
-            {
-                line = line, 
-                lexeme = lexeme,
-                id = 0
-            };
+            var token = new Token { line = line, lexeme = lexeme, id = 0 };
 
+            // checking if lexeme is language specific
             if (codesTable.ContainsKey(lexeme))
             {
                 token.code = codesTable[lexeme];

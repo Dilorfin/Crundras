@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace Lexical_Analyzer
+namespace LexicalAnalyzer
 {
-    public class State
+    class State
     {
         public int Id { get; }
 
@@ -57,7 +57,7 @@ namespace Lexical_Analyzer
         public bool TakeCharacter { get;}
     }
 
-    public class ErrorState : State
+    class ErrorState : State
     {
         public string Message { get; }
 

@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "Lexical Analyzer": {
-      "commandName": "Project",
-      "commandLineArgs": "\"../../../../../../Crundras/program.crun\""
-    }
-  }
-}

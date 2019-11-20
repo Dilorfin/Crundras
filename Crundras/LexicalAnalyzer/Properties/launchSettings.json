@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "LexicalAnalyzer": {
+      "commandName": "Project",
+      "commandLineArgs": "\"../../../../../Artifacts/program.crun\""
+    }
+  }
+}

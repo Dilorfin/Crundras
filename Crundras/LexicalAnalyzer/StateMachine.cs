@@ -1,4 +1,4 @@
-﻿namespace Lexical_Analyzer
+﻿namespace LexicalAnalyzer
 {
     class StateMachine
     {
@@ -101,10 +101,13 @@
 
         public void NextState(int charClass)
         {
+            // refreshing state in final state
             if (CurrentState.IsFinal)
             {
                 CurrentState = initialState;
             }
+
+            // transiting to next state
             CurrentState = CurrentState.Transit(charClass);
         }
     }
