@@ -1,41 +1,41 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace LexicalAnalyzer
 {
     public class TokenTable
     {
-        public static readonly Dictionary<string, uint> codesTable = new Dictionary<string, uint>
+        public static readonly Dictionary<uint, string> codesTable = new Dictionary<uint, string>
         {
-            { "int", 4 },
-            { "float", 5 },
-            { "if", 6 },
-            { "for", 7 },
-            { "to", 8 },
-            { "by", 9 },
-            { "while", 10 },
-            { "rof", 11 },
-            { "$", 12 },
-            { "@", 13 },
-            { "=", 14 },
-            { "+", 15 },
-            { "-", 16 },
-            { "*", 17 },
-            { "**", 18 },
-            { "/", 19 },
-            { "%", 20 },
-            { "<", 21 },
-            { ">", 22 },
-            { "<=", 23 },
-            { "==", 24 },
-            { ">=", 25 },
-            { "!=", 26 },
-            { "(", 27 },
-            { ")", 28 },
-            { "{", 29 },
-            { "}", 30 },
-            { ";", 31 }
+            { 4, "int"},
+            { 5, "float"},
+            { 6, "if"},
+            { 7, "for"},
+            { 8, "to"},
+            { 9, "by"},
+            { 10, "while"},
+            { 11, "rof"},
+            { 12, "$"},
+            { 13, "@"},
+            { 14, "="},
+            { 15, "+"},
+            { 16, "-"},
+            { 17, "*"},
+            { 18, "**"},
+            { 19, "/"},
+            { 20, "%"},
+            { 21, "<"},
+            { 22, ">"},
+            { 23, "<="},
+            { 24, "=="},
+            { 25, ">="},
+            { 26, "!="},
+            { 27, "("},
+            { 28, ")"},
+            { 29, "{"},
+            { 30, "}"},
+            { 31, ";"}
         };
-
         public struct Token
         {
             public uint line;
@@ -46,17 +46,17 @@ namespace LexicalAnalyzer
 
         public LinkedList<Token> tokensList = new LinkedList<Token>();
 
-        public Dictionary<string, uint> literalsTable = new Dictionary<string, uint>();
-        public Dictionary<string, uint> identifiersTable = new Dictionary<string, uint>();
+        public Dictionary<uint, string> literalsTable = new Dictionary<uint, string>();
+        public Dictionary<uint, string> identifiersTable = new Dictionary<uint, string>();
 
         public void AddToken(uint line, string lexeme, int stateId)
         {
             var token = new Token { line = line, lexeme = lexeme, id = 0 };
-
+            
             // checking if lexeme is language specific
-            if (codesTable.ContainsKey(lexeme))
+            if (codesTable.ContainsValue(lexeme))
             {
-                token.code = codesTable[lexeme];
+                token.code = codesTable.First(pair => pair.Value == lexeme).Key;
             }
             else
             {
@@ -64,26 +64,35 @@ namespace LexicalAnalyzer
                 if (stateId == 3)
                 {
                     token.code = 1;
-                    if (!identifiersTable.ContainsKey(lexeme))
+                    if (!identifiersTable.ContainsValue(lexeme))
                     {
-                        identifiersTable.Add(lexeme, (uint)(identifiersTable.Count+1));
+                        identifiersTable.Add((uint)(identifiersTable.Count+1), lexeme);
                     }
-                    token.id = identifiersTable[lexeme];
+                    token.id = identifiersTable.First(pair => pair.Value == lexeme).Key;
                 }
-                // float
+                // (int | float) literals
                 else
                 {
-                    token.code = (uint) (stateId == 6? 3 : 2);
+                    // 2 - int 3 - float
+                    token.code = (uint) (stateId == 7? 2 : 3);
 
-                    if (!literalsTable.ContainsKey(lexeme))
+                    if (!literalsTable.ContainsValue(lexeme))
                     {
-                        literalsTable.Add(lexeme, (uint)(literalsTable.Count+1));
+                        literalsTable.Add((uint)(literalsTable.Count+1), lexeme);
                     }
-                    token.id = literalsTable[lexeme];
+                    token.id = literalsTable.First(pair => pair.Value == lexeme).Key;
                 }
             }
 
             tokensList.AddLast(token);
+        }
+
+        public static string GetLexemeName(uint code)
+        {
+            if (code == 1) return "identifier";
+            if (code == 2) return "int";
+            if (code == 3) return "float";
+            return codesTable[code];
         }
     }
 }
