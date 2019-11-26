@@ -17,11 +17,13 @@
 
             states[5] = new State(5)
                 .ConfigureSelfTransition(2)
+                .ConfigureTransition(1, new ErrorState(202, "Unexpected character"))
                 .ConfigureOtherwiseTransition(states[6]);
 
             states[4] = new State(4)
                 .ConfigureSelfTransition(2)
                 .ConfigureTransition('.', states[5])
+                .ConfigureTransition(1, new ErrorState(202, "Unexpected character"))
                 .ConfigureOtherwiseTransition(states[7]);
 
             // identifiers
@@ -106,7 +108,7 @@
             {
                 CurrentState = initialState;
             }
-
+            
             // transiting to next state
             CurrentState = CurrentState.Transit(charClass);
         }
