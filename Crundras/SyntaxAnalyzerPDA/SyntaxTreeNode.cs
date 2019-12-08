@@ -1,18 +1,14 @@
 ﻿using System.Collections.Generic;
 
-namespace Recursive_descent_parser
+namespace SyntaxAnalyzerPDA
 {
     public class SyntaxTreeNode
     {
         private List<SyntaxTreeNode> children = null;
 
-        /// <summary>
-        /// node name
-        /// </summary>
+        public SyntaxTreeNode Parent { get; private set; } = null;
+
         public string Name { get; }
-        /// <summary>
-        /// id of identifier or literal
-        /// </summary>
         public uint Id { get; }
 
         public SyntaxTreeNode(string name, uint id = 0)
@@ -28,7 +24,13 @@ namespace Recursive_descent_parser
                 children = new List<SyntaxTreeNode>();
             }
 
+            node.SetParent(this);
             children.Add(node);
+        }
+
+        private void SetParent(SyntaxTreeNode parent)
+        {
+            Parent = parent;
         }
 
         public List<SyntaxTreeNode> GetChildren()

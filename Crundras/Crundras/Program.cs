@@ -26,9 +26,9 @@ namespace Crundras
                 foreach (var token in tokensTable.TokensList)
                 {
                     Console.Write($"{token.Line,3} {token.Lexeme,10} {token.Code,3}");
-                    if (token.Id != 0)
+                    if (token.ForeignId != 0)
                     {
-                        Console.Write($"{token.Id,3}");
+                        Console.Write($"{token.ForeignId,3}");
                     }
 
                     Console.WriteLine();

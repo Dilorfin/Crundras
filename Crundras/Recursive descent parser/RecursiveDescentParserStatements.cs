@@ -99,7 +99,7 @@ namespace Recursive_descent_parser
             node.AddChild(new SyntaxTreeNode(TokenTable.GetLexemeName(token.Code)));
             // identifier
             token = ExpectedToken(1);
-            node.AddChild(new SyntaxTreeNode("identifier", token.Id));
+            node.AddChild(new SyntaxTreeNode("identifier", token.ForeignId));
 
             ExpectedToken(31); // ';'
 
@@ -113,7 +113,7 @@ namespace Recursive_descent_parser
 
             ExpectedToken(12); // '$'
             var token = ExpectedToken(1); // identifier
-            node.AddChild(new SyntaxTreeNode("identifier", token.Id));
+            node.AddChild(new SyntaxTreeNode("identifier", token.ForeignId));
             ExpectedToken(31); // ';'
 
             return node;

@@ -1,6 +1,6 @@
 _Program = {Statement}.
 
-Statement = InputStatement | OutputStatement | CompoundStatement | ExpressionStatement | SelectionStatement | IterationStatement | DeclarationStatement | AssignmentStatement.
+Statement = InputStatement | OutputStatement | CompoundStatement | SelectionStatement | IterationStatement | DeclarationStatement | AssignmentStatement.
 SelectionStatement = "if" '(' Expression ')' Statement.
 IterationStatement = "for" AssignmentExpression "to" Expression "by" Expression "while" '(' Expression ')' Statement "rof" ';'.
 CompoundStatement = '{' {Statement} '}'.

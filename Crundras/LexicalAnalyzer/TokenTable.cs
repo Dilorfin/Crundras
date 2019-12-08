@@ -38,10 +38,22 @@ namespace LexicalAnalyzer
         };
         public struct Token
         {
+            /// <summary>
+            /// line of source file where was current token
+            /// </summary>
             public uint Line;
+            /// <summary>
+            /// just lexeme
+            /// </summary>
             public string Lexeme;
+            /// <summary>
+            /// token code in tokens table in specification
+            /// </summary>
             public uint Code;
-            public uint Id;
+            /// <summary>
+            /// id of lexeme in otherwise table
+            /// </summary>
+            public uint ForeignId;
         }
 
         public readonly LinkedList<Token> TokensList = new LinkedList<Token>();
@@ -51,7 +63,7 @@ namespace LexicalAnalyzer
 
         public void AddToken(uint line, string lexeme, int stateId)
         {
-            var token = new Token { Line = line, Lexeme = lexeme, Id = 0 };
+            var token = new Token { Line = line, Lexeme = lexeme, ForeignId = 0 };
             
             // checking if lexeme is language specific
             if (CodesTable.ContainsValue(lexeme))
@@ -68,7 +80,7 @@ namespace LexicalAnalyzer
                     {
                         IdentifiersTable.Add((uint)(IdentifiersTable.Count+1), lexeme);
                     }
-                    token.Id = IdentifiersTable.First(pair => pair.Value == lexeme).Key;
+                    token.ForeignId = IdentifiersTable.First(pair => pair.Value == lexeme).Key;
                 }
                 // (int | float) literals
                 else
@@ -80,7 +92,7 @@ namespace LexicalAnalyzer
                     {
                         LiteralsTable.Add((uint)(LiteralsTable.Count+1), lexeme);
                     }
-                    token.Id = LiteralsTable.First(pair => pair.Value == lexeme).Key;
+                    token.ForeignId = LiteralsTable.First(pair => pair.Value == lexeme).Key;
                 }
             }
 

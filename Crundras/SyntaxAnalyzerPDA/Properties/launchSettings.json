@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "SyntaxAnalyzerPDA": {
+      "commandName": "Project",
+      "commandLineArgs": "\"../../../../../Artifacts/program.crun\""
+    }
+  }
+}

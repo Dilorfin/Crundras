@@ -34,7 +34,7 @@ namespace Recursive_descent_parser
             else if (GetTokenCode() >= 1 && GetTokenCode() <= 3)
             {
                 var name = TokenTable.GetLexemeName(GetTokenCode());
-                node.AddChild(new SyntaxTreeNode(name, tokenListNode.Value.Id));
+                node.AddChild(new SyntaxTreeNode(name, tokenListNode.Value.ForeignId));
 
                 TransitToNextToken();
             }
@@ -73,7 +73,7 @@ namespace Recursive_descent_parser
                 else if (GetTokenCode() >= 1 && GetTokenCode() <= 3)
                 {
                     var name = TokenTable.GetLexemeName(GetTokenCode());
-                    node.AddChild(new SyntaxTreeNode(name, tokenListNode.Value.Id));
+                    node.AddChild(new SyntaxTreeNode(name, tokenListNode.Value.ForeignId));
 
                     TransitToNextToken();
                 }
@@ -93,7 +93,7 @@ namespace Recursive_descent_parser
             SyntaxTreeNode node = new SyntaxTreeNode("assignment");
 
             var token = ExpectedToken(1); // identifier
-            node.AddChild(new SyntaxTreeNode("identifier", token.Id));
+            node.AddChild(new SyntaxTreeNode("identifier", token.ForeignId));
 
             ExpectedToken(14); // '='
 
