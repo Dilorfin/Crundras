@@ -7,36 +7,27 @@ namespace Recursive_descent_parser
         // Statement = InputStatement | OutputStatement | CompoundStatement | ExpressionStatement | SelectionStatement | IterationStatement | DeclarationStatement | AssignmentStatement.
         private SyntaxTreeNode Statement()
         {
-            SyntaxTreeNode node = null;
-
-            switch (GetTokenCode())
+            var node = GetTokenCode() switch
             {
-                case 1: // 'identifier'
-                    node = AssignmentStatement();
-                    break;
-                case 12: // '$'
-                    node = InputStatement();
-                    break;
-                case 13: // '@'
-                    node = OutputStatement();
-                    break;
-                case 29: // '{'
-                    node = CompoundStatement();
-                    break;
-                case 6: // 'if'
-                    node = SelectionStatement();
-                    break;
-                case 7: // 'for'
-                    node = IterationStatement();
-                    break;
-                case 4: // 'int'
-                case 5: // 'float'
-                    node = DeclarationStatement();
-                    break;
-                default:
-                    node = ExpressionStatement();
-                    break;
-            }
+                // 'identifier'
+                1 => AssignmentStatement(),
+                // '$'
+                12 => InputStatement(),
+                // '@'
+                13 => OutputStatement(),
+                // '{'
+                29 => CompoundStatement(),
+                // 'if'
+                6 => SelectionStatement(),
+                // 'for'
+                7 => IterationStatement(),
+                // 'int'
+                4 => DeclarationStatement(),
+                // 'float'
+                5 => DeclarationStatement(),
+                // default
+                _ => ExpressionStatement()
+            };
 
             return node;
         }
@@ -105,10 +96,10 @@ namespace Recursive_descent_parser
 
             //"int" | "float"
             var token = ExpectedOneOfTokens("TypeSpecifier", 4, 5);
-            node.AddChild(new SyntaxTreeNode(TokenTable.GetLexemeName(token.code)));
+            node.AddChild(new SyntaxTreeNode(TokenTable.GetLexemeName(token.Code)));
             // identifier
             token = ExpectedToken(1);
-            node.AddChild(new SyntaxTreeNode("identifier", token.id));
+            node.AddChild(new SyntaxTreeNode("identifier", token.Id));
 
             ExpectedToken(31); // ';'
 
@@ -122,7 +113,7 @@ namespace Recursive_descent_parser
 
             ExpectedToken(12); // '$'
             var token = ExpectedToken(1); // identifier
-            node.AddChild(new SyntaxTreeNode("identifier", token.id));
+            node.AddChild(new SyntaxTreeNode("identifier", token.Id));
             ExpectedToken(31); // ';'
 
             return node;

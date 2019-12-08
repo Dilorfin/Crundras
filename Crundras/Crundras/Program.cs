@@ -23,12 +23,12 @@ namespace Crundras
             {
                 var tokensTable = new LexicalAnalyzer.LexicalAnalyzer().Analyze(args[0]);
 
-                foreach (var token in tokensTable.tokensList)
+                foreach (var token in tokensTable.TokensList)
                 {
-                    Console.Write($"{token.line,3} {token.lexeme,10} {token.code,3}");
-                    if (token.id != 0)
+                    Console.Write($"{token.Line,3} {token.Lexeme,10} {token.Code,3}");
+                    if (token.Id != 0)
                     {
-                        Console.Write($"{token.id,3}");
+                        Console.Write($"{token.Id,3}");
                     }
 
                     Console.WriteLine();

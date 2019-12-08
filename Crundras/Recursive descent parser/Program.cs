@@ -41,8 +41,8 @@ namespace Recursive_descent_parser
             if (node.Id != 0)
             {
                 Console.Write(node.Name == "identifier"
-                    ? $"\"{tokensTable.identifiersTable[node.Id]}\""
-                    : $"\"{tokensTable.literalsTable[node.Id]}\"");
+                    ? $"\"{tokensTable.IdentifiersTable[node.Id]}\""
+                    : $"\"{tokensTable.LiteralsTable[node.Id]}\"");
                 Console.Write($" ({node.Id})");
             }
             Console.WriteLine();

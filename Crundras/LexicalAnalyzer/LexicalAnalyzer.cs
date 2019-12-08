@@ -28,7 +28,7 @@ namespace LexicalAnalyzer
                 stateMachine.NextState(charClass);
 
                 // checking if error has occurred
-                CheckError(stateMachine.CurrentState, nextChar, line);
+                CheckError(stateMachine.CurrentState, nextChar);
 
                 // counting lines
                 if (nextChar == '\n') 
@@ -56,7 +56,7 @@ namespace LexicalAnalyzer
             // '\0' - last character
             char lastChar = '\0';
             stateMachine.NextState(lastChar);
-            CheckError(stateMachine.CurrentState, lastChar, line);
+            CheckError(stateMachine.CurrentState, lastChar);
 
             if (stateMachine.CurrentState.IsFinal)
             {
@@ -74,7 +74,7 @@ namespace LexicalAnalyzer
             tokenTable.AddToken(line, lexeme, stateMachine.CurrentState.Id);
         }
 
-        private void CheckError(State state, char nextChar, uint line)
+        private void CheckError(State state, char nextChar)
         {
             if (!state.IsError) 
                 return;

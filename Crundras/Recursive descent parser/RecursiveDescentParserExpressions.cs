@@ -34,14 +34,14 @@ namespace Recursive_descent_parser
             else if (GetTokenCode() >= 1 && GetTokenCode() <= 3)
             {
                 var name = TokenTable.GetLexemeName(GetTokenCode());
-                node.AddChild(new SyntaxTreeNode(name, tokenListNode.Value.id));
+                node.AddChild(new SyntaxTreeNode(name, tokenListNode.Value.Id));
 
                 TransitToNextToken();
             }
             else
             {
                 var token = tokenListNode.Value;
-                throw new Exception($"Unexpected token {TokenTable.GetLexemeName(token.code)} in line {token.line}.");
+                throw new Exception($"Unexpected token {TokenTable.GetLexemeName(token.Code)} in line {token.Line}.");
             }
 
             while(GetTokenCode() >= 15 && GetTokenCode() <= 26)
@@ -73,14 +73,14 @@ namespace Recursive_descent_parser
                 else if (GetTokenCode() >= 1 && GetTokenCode() <= 3)
                 {
                     var name = TokenTable.GetLexemeName(GetTokenCode());
-                    node.AddChild(new SyntaxTreeNode(name, tokenListNode.Value.id));
+                    node.AddChild(new SyntaxTreeNode(name, tokenListNode.Value.Id));
 
                     TransitToNextToken();
                 }
                 else
                 {
                     var token = tokenListNode.Value;
-                    throw new Exception($"Unexpected token {TokenTable.GetLexemeName(token.code)} in line {token.line}.");
+                    throw new Exception($"Unexpected token {TokenTable.GetLexemeName(token.Code)} in line {token.Line}.");
                 }
             }
 
@@ -93,7 +93,7 @@ namespace Recursive_descent_parser
             SyntaxTreeNode node = new SyntaxTreeNode("assignment");
 
             var token = ExpectedToken(1); // identifier
-            node.AddChild(new SyntaxTreeNode("identifier", token.id));
+            node.AddChild(new SyntaxTreeNode("identifier", token.Id));
 
             ExpectedToken(14); // '='
 
