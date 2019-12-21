@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace SyntaxAnalyzerPDA.PDA
 {
@@ -27,15 +26,11 @@ namespace SyntaxAnalyzerPDA.PDA
         private readonly Dictionary<uint, TransitionUnit> transitions = new Dictionary<uint, TransitionUnit>();
         private TransitionUnit otherwise = null;
 
-        public State(int id, Stack<int> stack, bool isFinal = false, bool isStart = false)
+        public State(int id, Stack<int> stack, bool isFinal = false)
         {
             this.Id = id;
             this.stack = stack;
-            this.IsStart = isStart;
             this.IsFinal = isFinal;
-
-            Debug.Assert(!(IsFinal&&IsStart), "What am I?", 
-                "State is final and start in the same time.");
         }
 
         public State ConfigureTransition(uint tokenType, int? pop, int? push, State nextState)
@@ -86,8 +81,5 @@ namespace SyntaxAnalyzerPDA.PDA
 
         public bool IsError => this.GetType() == typeof(ErrorState);
         public bool IsFinal { get; }
-        public bool IsStart { get; }
-
-        //public bool IsContinue { get; }
     }
 }

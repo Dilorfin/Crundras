@@ -13,19 +13,7 @@ namespace SyntaxAnalyzerPDA.PDA
 
         public StateMachine()
         {
-            states[4] = new State(4, stack, true);
-
-            states[3] = new State(3, stack);
-
-            states[2] = new State(2, stack)
-                .ConfigureTransition(31, null, null, states[3]);
-
-            states[1] = new State(1, stack, false, true)
-                .ConfigureTransition(1, null, null, states[2]);
-
-            states[0] = new State(0, stack, false, true)
-                .ConfigureTransition(4, null, 4, states[1]);
-
+            
             CurrentState = states[0];
         }
         
