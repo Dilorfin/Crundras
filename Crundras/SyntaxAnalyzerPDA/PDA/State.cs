@@ -26,14 +26,15 @@ namespace SyntaxAnalyzerPDA.PDA
         private readonly Dictionary<uint, TransitionUnit> transitions = new Dictionary<uint, TransitionUnit>();
         private TransitionUnit otherwise = null;
 
-        public State(int id, Stack<int> stack, bool isFinal = false)
+        public State(int id, Stack<int> stack, bool isFinal = false, bool takeToken = true)
         {
             this.Id = id;
             this.stack = stack;
+            this.TakeToken = takeToken;
             this.IsFinal = isFinal;
         }
 
-        public State ConfigureTransition(uint tokenType, int? pop, int? push, State nextState)
+        public State ConfigureTransition(uint tokenType, State nextState, int? pop = null, int? push = null)
         {
             if (CanTransit(tokenType))
                 return this;
@@ -44,7 +45,7 @@ namespace SyntaxAnalyzerPDA.PDA
 
             return this;
         }
-        public State ConfigureSelfTransition(uint tokenType, int? pop, int? push)
+        public State ConfigureSelfTransition(uint tokenType, int? pop = null, int? push = null)
         {
             if (CanTransit(tokenType)) 
                 return this;
@@ -55,7 +56,7 @@ namespace SyntaxAnalyzerPDA.PDA
 
             return this;
         }
-        public State ConfigureOtherwiseTransition(int? pop, int? push, State state)
+        public State ConfigureOtherwiseTransition(State state, int? pop = null, int? push = null)
         {
             otherwise = new TransitionUnit(pop, push, state);
             return this;
@@ -80,6 +81,8 @@ namespace SyntaxAnalyzerPDA.PDA
         }
 
         public bool IsError => this.GetType() == typeof(ErrorState);
+        public bool IsLevelStart => new List<int>{ 0, 100, 1, 4, 7, 9, 11}.Contains(Id);
         public bool IsFinal { get; }
+        public bool TakeToken { get; }
     }
 }

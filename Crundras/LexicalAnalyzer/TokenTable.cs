@@ -102,9 +102,17 @@ namespace LexicalAnalyzer
         public static string GetLexemeName(uint code)
         {
             if (code == 1) return "identifier";
-            if (code == 2) return "int";
-            if (code == 3) return "float";
+            if (code == 2) return "int_literal";
+            if (code == 3) return "float_literal";
             return CodesTable[code];
+        }
+
+        public static uint GetLexemeId(string lexeme)
+        {
+            if (lexeme == "identifier") return 1;
+            if (lexeme == "int_literal") return 2;
+            if (lexeme == "float_literal") return 3;
+            return CodesTable.First(p => p.Value == lexeme).Key;
         }
     }
 }
