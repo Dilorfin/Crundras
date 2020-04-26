@@ -38,7 +38,9 @@ namespace SyntaxAnalyzerPDA.PDA
         public State ConfigureTransition(uint tokenType, State nextState, int? pop = null, int? push = null)
         {
             if (CanTransit(tokenType))
+            {
                 return this;
+            }
 
             var transitionUnit = new TransitionUnit(pop, push, nextState);
 
@@ -49,7 +51,9 @@ namespace SyntaxAnalyzerPDA.PDA
         public State ConfigureSelfTransition(uint tokenType, int? pop = null, int? push = null)
         {
             if (CanTransit(tokenType))
+            {
                 return this;
+            }
 
             var transitionUnit = new TransitionUnit(pop, push, this);
 
@@ -67,7 +71,9 @@ namespace SyntaxAnalyzerPDA.PDA
         public State Transit(uint tokenType)
         {
             if (!CanTransit(tokenType))
+            {
                 return otherwise.State;
+            }
 
             var transitionUnit = transitions[tokenType];
 

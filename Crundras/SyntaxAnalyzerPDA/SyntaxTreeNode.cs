@@ -19,10 +19,7 @@ namespace SyntaxAnalyzerPDA
 
         public void AddChild(SyntaxTreeNode node)
         {
-            if (children == null)
-            {
-                children = new List<SyntaxTreeNode>();
-            }
+            children ??= new List<SyntaxTreeNode>();
 
             node.SetParent(this);
             children.Add(node);

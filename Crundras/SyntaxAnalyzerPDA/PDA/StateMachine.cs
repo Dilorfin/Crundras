@@ -173,7 +173,10 @@ namespace SyntaxAnalyzerPDA.PDA
                 var previousState = CurrentState;
                 CurrentState = CurrentState.Transit(tokenType);
                 if (CurrentState == null)
+                {
                     throw new Exception($"lexeme: {TokenTable.GetLexemeName(tokenType)}. state: {previousState.Id}");
+                }
+
                 return;
             }
 

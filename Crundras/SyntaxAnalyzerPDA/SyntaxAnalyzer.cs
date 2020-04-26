@@ -17,7 +17,7 @@ namespace SyntaxAnalyzerPDA
 
         public SyntaxTreeNode Analyze()
         {
-            StateMachine stateMachine = new StateMachine();
+            var stateMachine = new StateMachine();
 
             var syntaxTreeNode = syntaxTree;
 
