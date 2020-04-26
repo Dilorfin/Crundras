@@ -6,7 +6,7 @@ namespace LexicalAnalyzer
     {
         public int Id { get; }
 
-        private Dictionary<int, State> transitions = new Dictionary<int, State>();
+        private readonly Dictionary<int, State> transitions = new Dictionary<int, State>();
         private State otherwise = null;
 
         public State(int id, bool isFinal = false, bool takeCharacter = true)
@@ -54,6 +54,6 @@ namespace LexicalAnalyzer
 
         public bool IsError => this.GetType() == typeof(ErrorState);
         public bool IsFinal { get; }
-        public bool TakeCharacter { get;}
+        public bool TakeCharacter { get; }
     }
 }

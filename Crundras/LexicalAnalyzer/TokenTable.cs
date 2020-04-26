@@ -64,7 +64,7 @@ namespace LexicalAnalyzer
         public void AddToken(uint line, string lexeme, int stateId)
         {
             var token = new Token { Line = line, Lexeme = lexeme, ForeignId = 0 };
-            
+
             // checking if lexeme is language specific
             if (CodesTable.ContainsValue(lexeme))
             {
@@ -78,7 +78,7 @@ namespace LexicalAnalyzer
                     token.Code = 1;
                     if (!IdentifiersTable.ContainsValue(lexeme))
                     {
-                        IdentifiersTable.Add((uint)(IdentifiersTable.Count+1), lexeme);
+                        IdentifiersTable.Add((uint)(IdentifiersTable.Count + 1), lexeme);
                     }
                     token.ForeignId = IdentifiersTable.First(pair => pair.Value == lexeme).Key;
                 }
@@ -86,11 +86,11 @@ namespace LexicalAnalyzer
                 else
                 {
                     // 2 - int 3 - float
-                    token.Code = (uint) (stateId == 7? 2 : 3);
+                    token.Code = (uint)(stateId == 7 ? 2 : 3);
 
                     if (!LiteralsTable.ContainsValue(lexeme))
                     {
-                        LiteralsTable.Add((uint)(LiteralsTable.Count+1), lexeme);
+                        LiteralsTable.Add((uint)(LiteralsTable.Count + 1), lexeme);
                     }
                     token.ForeignId = LiteralsTable.First(pair => pair.Value == lexeme).Key;
                 }

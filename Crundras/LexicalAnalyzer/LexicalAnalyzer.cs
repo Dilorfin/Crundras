@@ -7,21 +7,21 @@ namespace LexicalAnalyzer
 {
     public class LexicalAnalyzer
     {
-        private StateMachine stateMachine = new StateMachine();
-        private TokenTable tokenTable = new TokenTable();
+        private readonly StateMachine stateMachine = new StateMachine();
+        private readonly TokenTable tokenTable = new TokenTable();
 
         private uint line = 1;
 
         public TokenTable Analyze(string fileName)
         {
             using var file = new StreamReader(fileName, true);
-            
+
             StringBuilder builder = new StringBuilder();
 
             while (!file.EndOfStream)
             {
                 // looking throw next character
-                char nextChar = (char) file.Peek();
+                char nextChar = (char)file.Peek();
 
                 int charClass = GetCharClass(nextChar);
                 // transiting state machine to next state
@@ -31,13 +31,13 @@ namespace LexicalAnalyzer
                 CheckError(stateMachine.CurrentState, nextChar);
 
                 // counting lines
-                if (nextChar == '\n') 
+                if (nextChar == '\n')
                     line++;
 
                 // checking for '*' states
                 if (stateMachine.CurrentState.TakeCharacter)
                 {
-                    builder.Append((char) file.Read());
+                    builder.Append((char)file.Read());
                 }
                 // adding lexeme to table in final state
                 if (stateMachine.CurrentState.IsFinal)
@@ -76,7 +76,7 @@ namespace LexicalAnalyzer
 
         private void CheckError(State state, char nextChar)
         {
-            if (!state.IsError) 
+            if (!state.IsError)
                 return;
 
             // character escaping
@@ -102,7 +102,7 @@ namespace LexicalAnalyzer
             {
                 charClass = 3;
             }
-            
+
             return charClass;
         }
     }

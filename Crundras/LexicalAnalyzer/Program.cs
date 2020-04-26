@@ -18,14 +18,14 @@ namespace LexicalAnalyzer
                 Console.WriteLine($"File \"{args[0]}\" doesn't seem to exist.");
                 return;
             }
-            
+
             try
             {
                 var tokensTable = new LexicalAnalyzer().Analyze(args[0]);
 
                 foreach (var token in tokensTable.TokensList)
                 {
-                    Console.Write($"{token.Line, 3} {token.Lexeme, 10} {token.Code, 3}");
+                    Console.Write($"{token.Line,3} {token.Lexeme,10} {token.Code,3}");
                     if (token.ForeignId != 0)
                     {
                         Console.Write($"{token.ForeignId,3}");

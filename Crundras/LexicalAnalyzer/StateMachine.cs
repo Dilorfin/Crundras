@@ -2,8 +2,8 @@
 {
     class StateMachine
     {
-        private State[] states = new State[22];
-        private State initialState;
+        private readonly State[] states = new State[22];
+        private readonly State initialState;
         public State CurrentState { get; private set; }
 
         public StateMachine()
@@ -49,7 +49,7 @@
             states[11] = new State(11)
                 .ConfigureTransition('=', states[12])
                 .ConfigureOtherwiseTransition(states[13]);
-            
+
             // >= & >
             states[15] = new State(15, true);
             states[16] = new State(16, true, false);
@@ -64,7 +64,7 @@
             states[17] = new State(17)
                 .ConfigureTransition('=', states[18])
                 .ConfigureOtherwiseTransition(new ErrorState(201, "Expected '='"));
-            
+
             // ** & *
             states[20] = new State(20, true);
             states[21] = new State(21, true, false);
@@ -96,7 +96,7 @@
                 .ConfigureTransition('!', states[17])
                 .ConfigureTransition('*', states[19])
                 .ConfigureOtherwiseTransition(new ErrorState(200, "Unknown symbol"));
-            
+
             initialState = states[0];
             CurrentState = initialState;
         }
@@ -108,7 +108,7 @@
             {
                 CurrentState = initialState;
             }
-            
+
             // transiting to next state
             CurrentState = CurrentState.Transit(charClass);
         }
