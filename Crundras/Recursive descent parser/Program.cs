@@ -1,6 +1,6 @@
-﻿using System;
+﻿using LexicalAnalyzer;
+using System;
 using System.IO;
-using LexicalAnalyzer;
 
 namespace Recursive_descent_parser
 {
@@ -46,13 +46,13 @@ namespace Recursive_descent_parser
                 Console.Write($" ({node.Id})");
             }
             Console.WriteLine();
-            
-            if (node.GetChildren() == null) 
+
+            if (node.GetChildren() == null)
                 return;
 
             foreach (var child in node.GetChildren())
             {
-                PrintSyntaxTree(tokensTable, child, level+1);
+                PrintSyntaxTree(tokensTable, child, level + 1);
             }
         }
     }

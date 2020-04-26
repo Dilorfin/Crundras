@@ -1,5 +1,5 @@
-﻿using System;
-using LexicalAnalyzer;
+﻿using LexicalAnalyzer;
+using System;
 
 namespace Recursive_descent_parser
 {
@@ -9,7 +9,7 @@ namespace Recursive_descent_parser
         SyntaxTreeNode Expression()
         {
             SyntaxTreeNode node = new SyntaxTreeNode("expression");
-            
+
             if (GetTokenCode() == 15) // '+'
             {
                 node.AddChild(new SyntaxTreeNode("+"));
@@ -44,7 +44,7 @@ namespace Recursive_descent_parser
                 throw new Exception($"Unexpected token {TokenTable.GetLexemeName(token.Code)} in line {token.Line}.");
             }
 
-            while(GetTokenCode() >= 15 && GetTokenCode() <= 26)
+            while (GetTokenCode() >= 15 && GetTokenCode() <= 26)
             {
                 node.AddChild(new SyntaxTreeNode(TokenTable.GetLexemeName(GetTokenCode())));
                 TransitToNextToken();

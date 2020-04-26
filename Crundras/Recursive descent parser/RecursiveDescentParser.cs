@@ -1,7 +1,7 @@
-﻿using System;
+﻿using LexicalAnalyzer;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using LexicalAnalyzer;
 
 namespace Recursive_descent_parser
 {
@@ -22,7 +22,7 @@ namespace Recursive_descent_parser
         SyntaxTreeNode _Program()
         {
             SyntaxTreeNode node = new SyntaxTreeNode("statements");
-            
+
             while (tokenListNode != null)
             {
                 node.AddChild(Statement());
@@ -64,9 +64,13 @@ namespace Recursive_descent_parser
         TokenTable.Token ExpectedToken(uint tokenCode)
         {
             CheckUnexpectedEnd();
-            
+
             if (GetTokenCode() != tokenCode)
-                throw new Exception($"Expected \"{TokenTable.GetLexemeName(tokenCode)}\" but found \"{TokenTable.GetLexemeName(GetTokenCode())}\" in line {tokenListNode.Value.Line}.");
+            {
+                throw new Exception($"Expected \"{TokenTable.GetLexemeName(tokenCode)}\" " +
+                                    $"but found \"{TokenTable.GetLexemeName(GetTokenCode())}\" " +
+                                    $"in line {tokenListNode.Value.Line}.");
+            }
 
             var token = tokenListNode.Value;
             TransitToNextToken();
