@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "AntlrSyntax": {
+      "commandName": "Project",
+      "commandLineArgs": "\"../../../../../Artifacts/program.crun\""
+    }
+  }
+}

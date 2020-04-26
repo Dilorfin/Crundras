@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Antlr4.Runtime.Standard" Version="4.8.0" />
+  </ItemGroup>
+
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="java -jar  $(SolutionDir)..\Programs\Antlr\antlr-4.8-complete.jar -Dlanguage=CSharp $(SolutionDir)..\Artifacts\Crundras.g4 -Werror -package Crundras -o $(SolutionDir)AntlrSyntax\ANTLR\" />
+  </Target>
+
+</Project>
