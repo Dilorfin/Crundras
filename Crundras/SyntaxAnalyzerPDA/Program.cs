@@ -37,7 +37,7 @@ namespace SyntaxAnalyzerPDA
 
         static void PrintSyntaxTree(TokenTable tokensTable, SyntaxTreeNode node, int level = 0)
         {
-            if(node == null) return;
+            if (node == null) return;
 
             Console.Write($"{new string('-', level)} {node.Name} ");
             if (node.Id != 0)
@@ -48,13 +48,13 @@ namespace SyntaxAnalyzerPDA
                 Console.Write($" ({node.Id})");
             }
             Console.WriteLine();
-            
-            if (node.GetChildren() == null) 
+
+            if (node.GetChildren() == null)
                 return;
 
             foreach (var child in node.GetChildren())
             {
-                PrintSyntaxTree(tokensTable, child, level+1);
+                PrintSyntaxTree(tokensTable, child, level + 1);
             }
         }
     }

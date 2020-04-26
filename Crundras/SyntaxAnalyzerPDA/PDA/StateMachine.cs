@@ -67,7 +67,7 @@ namespace SyntaxAnalyzerPDA.PDA
                 .ConfigureTransition(TokenTable.GetLexemeId("float_literal"), StateById(102))
                 .ConfigureSelfTransition(TokenTable.GetLexemeId("("), null, 103);
             states.Add(state);
-            
+
             #endregion
 
             #region STATEMENT
@@ -124,7 +124,7 @@ namespace SyntaxAnalyzerPDA.PDA
             state = new State(4, stack)
                 .ConfigureTransition(TokenTable.GetLexemeId("identifier"), StateById(5));
             states.Add(state);
-            
+
             state = new State(2, stack)
                 .ConfigureTransition(TokenTable.GetLexemeId(";"), StateById(3));
             states.Add(state);
@@ -165,15 +165,15 @@ namespace SyntaxAnalyzerPDA.PDA
 
             CurrentState = StateById(0);
         }
-        
+
         public void NextState(uint tokenType)
         {
             if (!CurrentState.IsFinal)
             {
-                var tempState = CurrentState;
+                var previousState = CurrentState;
                 CurrentState = CurrentState.Transit(tokenType);
-                if(CurrentState == null)
-                    throw new Exception($"lexeme: {TokenTable.GetLexemeName(tokenType)}. state: {tempState.Id}");
+                if (CurrentState == null)
+                    throw new Exception($"lexeme: {TokenTable.GetLexemeName(tokenType)}. state: {previousState.Id}");
                 return;
             }
 
@@ -189,7 +189,5 @@ namespace SyntaxAnalyzerPDA.PDA
 
             NextState(tokenType);
         }
-
-        public bool IsFinished => (stack.Count == 0) && CurrentState.IsFinal;
     }
 }

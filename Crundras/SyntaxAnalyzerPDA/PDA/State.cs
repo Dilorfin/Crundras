@@ -34,11 +34,12 @@ namespace SyntaxAnalyzerPDA.PDA
             this.IsFinal = isFinal;
         }
 
+        #region CONFIGS
         public State ConfigureTransition(uint tokenType, State nextState, int? pop = null, int? push = null)
         {
             if (CanTransit(tokenType))
                 return this;
-            
+
             var transitionUnit = new TransitionUnit(pop, push, nextState);
 
             transitions.Add(tokenType, transitionUnit);
@@ -47,7 +48,7 @@ namespace SyntaxAnalyzerPDA.PDA
         }
         public State ConfigureSelfTransition(uint tokenType, int? pop = null, int? push = null)
         {
-            if (CanTransit(tokenType)) 
+            if (CanTransit(tokenType))
                 return this;
 
             var transitionUnit = new TransitionUnit(pop, push, this);
@@ -61,10 +62,11 @@ namespace SyntaxAnalyzerPDA.PDA
             otherwise = new TransitionUnit(pop, push, state);
             return this;
         }
+        #endregion
 
         public State Transit(uint tokenType)
         {
-            if (!CanTransit(tokenType)) 
+            if (!CanTransit(tokenType))
                 return otherwise.State;
 
             var transitionUnit = transitions[tokenType];
@@ -81,7 +83,7 @@ namespace SyntaxAnalyzerPDA.PDA
         }
 
         public bool IsError => this.GetType() == typeof(ErrorState);
-        public bool IsLevelStart => new List<int>{ 0, 100, 1, 4, 7, 9, 11}.Contains(Id);
+        public bool IsLevelStart => new List<int> { 0, 100, 1, 4, 7, 9, 11 }.Contains(Id);
         public bool IsFinal { get; }
         public bool TakeToken { get; }
     }
