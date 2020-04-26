@@ -19,7 +19,7 @@ namespace Recursive_descent_parser
             return _Program();
         }
 
-        SyntaxTreeNode _Program()
+        private SyntaxTreeNode _Program()
         {
             SyntaxTreeNode node = new SyntaxTreeNode("statements");
 
@@ -31,37 +31,41 @@ namespace Recursive_descent_parser
             return node;
         }
 
-        uint GetTokenCode()
+        private uint GetTokenCode()
         {
             return tokenListNode.Value.Code;
         }
 
-        void CheckUnexpectedEnd()
+        private void CheckUnexpectedEnd()
         {
             if (tokenListNode == null)
+            {
                 throw new Exception("Unexpected end of the program.");
+            }
         }
 
-        void TransitToNextToken()
+        private void TransitToNextToken()
         {
             CheckUnexpectedEnd();
 
             tokenListNode = tokenListNode.Next;
         }
 
-        TokenTable.Token ExpectedOneOfTokens(string expected, params uint[] tokenCodes)
+        private TokenTable.Token ExpectedOneOfTokens(string expected, params uint[] tokenCodes)
         {
             CheckUnexpectedEnd();
 
             if (tokenCodes.All(tokenCode => GetTokenCode() != tokenCode))
+            {
                 throw new Exception($"Expected {expected} but found \"{TokenTable.GetLexemeName(GetTokenCode())}\" in line {tokenListNode.Value.Line}.");
+            }
 
             var token = tokenListNode.Value;
             TransitToNextToken();
             return token;
         }
 
-        TokenTable.Token ExpectedToken(uint tokenCode)
+        private TokenTable.Token ExpectedToken(uint tokenCode)
         {
             CheckUnexpectedEnd();
 

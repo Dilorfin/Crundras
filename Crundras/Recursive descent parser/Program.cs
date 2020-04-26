@@ -4,9 +4,9 @@ using System.IO;
 
 namespace Recursive_descent_parser
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             if (args.Length != 1)
             {
@@ -35,7 +35,7 @@ namespace Recursive_descent_parser
             Console.ReadKey();
         }
 
-        static void PrintSyntaxTree(TokenTable tokensTable, SyntaxTreeNode node, int level = 0)
+        private static void PrintSyntaxTree(TokenTable tokensTable, SyntaxTreeNode node, int level = 0)
         {
             Console.Write($"{new string('-', level)} {node.Name} ");
             if (node.Id != 0)
@@ -48,7 +48,9 @@ namespace Recursive_descent_parser
             Console.WriteLine();
 
             if (node.GetChildren() == null)
+            {
                 return;
+            }
 
             foreach (var child in node.GetChildren())
             {

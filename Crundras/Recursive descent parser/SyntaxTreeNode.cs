@@ -23,10 +23,7 @@ namespace Recursive_descent_parser
 
         public void AddChild(SyntaxTreeNode node)
         {
-            if (children == null)
-            {
-                children = new List<SyntaxTreeNode>();
-            }
+            children ??= new List<SyntaxTreeNode>();
 
             children.Add(node);
         }
