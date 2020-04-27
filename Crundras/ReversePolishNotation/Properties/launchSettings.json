@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ReversePolishNotation": {
+      "commandName": "Project",
+      "commandLineArgs": "\"../../../../../Artifacts/program.crun\""
+    }
+  }
+}

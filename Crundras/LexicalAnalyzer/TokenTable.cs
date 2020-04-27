@@ -36,25 +36,6 @@ namespace LexicalAnalyzer
             { 30, "}"},
             { 31, ";"}
         };
-        public struct Token
-        {
-            /// <summary>
-            /// line of source file where was current token
-            /// </summary>
-            public uint Line;
-            /// <summary>
-            /// just lexeme
-            /// </summary>
-            public string Lexeme;
-            /// <summary>
-            /// token code in tokens table in specification
-            /// </summary>
-            public uint Code;
-            /// <summary>
-            /// id of lexeme in otherwise table
-            /// </summary>
-            public uint ForeignId;
-        }
 
         public readonly LinkedList<Token> TokensList = new LinkedList<Token>();
 
@@ -86,7 +67,14 @@ namespace LexicalAnalyzer
                 else
                 {
                     // 2 - int 3 - float
-                    token.Code = (uint)(stateId == 7 ? 2 : 3);
+                    if (stateId == 7)
+                    {
+                        token.Code = 2;
+                    }
+                    else
+                    {
+                        token.Code = 3;
+                    }
 
                     if (!LiteralsTable.ContainsValue(lexeme))
                     {

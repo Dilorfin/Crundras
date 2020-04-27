@@ -7,7 +7,7 @@ namespace Recursive_descent_parser
 {
     public partial class RecursiveDescentParser
     {
-        private LinkedListNode<TokenTable.Token> tokenListNode;
+        private LinkedListNode<Token> tokenListNode;
 
         public RecursiveDescentParser(TokenTable tokenTable)
         {
@@ -51,7 +51,7 @@ namespace Recursive_descent_parser
             tokenListNode = tokenListNode.Next;
         }
 
-        private TokenTable.Token ExpectedOneOfTokens(string expected, params uint[] tokenCodes)
+        private Token ExpectedOneOfTokens(string expected, params uint[] tokenCodes)
         {
             CheckUnexpectedEnd();
 
@@ -65,7 +65,7 @@ namespace Recursive_descent_parser
             return token;
         }
 
-        private TokenTable.Token ExpectedToken(uint tokenCode)
+        private Token ExpectedToken(uint tokenCode)
         {
             CheckUnexpectedEnd();
 

@@ -45,9 +45,9 @@ namespace SyntaxAnalyzerPDA
             Console.Write($"{new string('-', level)} {node.Name} ");
             if (node.Id != 0)
             {
-                ////Console.Write(node.Name == "identifier"
-                //    ? $"\"{tokensTable.IdentifiersTable[node.Id]}\""
-                //    : $"\"{tokensTable.LiteralsTable[node.Id]}\"");
+                Console.Write(node.Name == "identifier"
+                    ? $"\"{tokensTable.IdentifiersTable[node.Id]}\""
+                    : $"\"{tokensTable.LiteralsTable[node.Id]}\"");
                 Console.Write($" ({node.Id})");
             }
             Console.WriteLine();

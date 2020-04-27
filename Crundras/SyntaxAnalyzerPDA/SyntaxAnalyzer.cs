@@ -7,7 +7,7 @@ namespace SyntaxAnalyzerPDA
 {
     public class SyntaxAnalyzer
     {
-        private LinkedListNode<TokenTable.Token> tokenListNode;
+        private LinkedListNode<Token> tokenListNode;
         private readonly SyntaxTreeNode syntaxTree = new SyntaxTreeNode("statements");
 
         public SyntaxAnalyzer(TokenTable tokenTable)
