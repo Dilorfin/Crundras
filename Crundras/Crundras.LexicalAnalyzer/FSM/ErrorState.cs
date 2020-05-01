@@ -1,4 +1,4 @@
-﻿namespace Crundras.LexicalAnalyzer
+﻿namespace Crundras.LexicalAnalyzer.FSM
 {
     internal class ErrorState : State
     {

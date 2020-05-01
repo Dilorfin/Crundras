@@ -1,4 +1,5 @@
 ﻿using Crundras.Common;
+using Crundras.LexicalAnalyzer.FSM;
 using System;
 using System.IO;
 using System.Text;

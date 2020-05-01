@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Crundras.LexicalAnalyzer
+namespace Crundras.LexicalAnalyzer.FSM
 {
     internal class State
     {
