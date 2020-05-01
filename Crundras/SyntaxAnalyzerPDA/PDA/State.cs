@@ -6,17 +6,17 @@ namespace SyntaxAnalyzerPDA.PDA
     {
         private class TransitionUnit
         {
-            public TransitionUnit(int? pop, int? push, State state)
+            public TransitionUnit(int? pop, int? push, int stateId)
             {
                 Pop = pop;
                 Push = push;
-                State = state;
+                StateId = stateId;
             }
 
             public int? Pop { get; }
             public int? Push { get; }
 
-            public State State { get; }
+            public int StateId { get; }
         }
 
         public int Id { get; }
@@ -35,14 +35,14 @@ namespace SyntaxAnalyzerPDA.PDA
         }
 
         #region CONFIGS
-        public State ConfigureTransition(uint tokenType, State nextState, int? pop = null, int? push = null)
+        public State ConfigureTransition(uint tokenType, int nextStateId, int? pop = null, int? push = null)
         {
             if (CanTransit(tokenType))
             {
                 return this;
             }
 
-            var transitionUnit = new TransitionUnit(pop, push, nextState);
+            var transitionUnit = new TransitionUnit(pop, push, nextStateId);
 
             transitions.Add(tokenType, transitionUnit);
 
@@ -55,24 +55,24 @@ namespace SyntaxAnalyzerPDA.PDA
                 return this;
             }
 
-            var transitionUnit = new TransitionUnit(pop, push, this);
+            var transitionUnit = new TransitionUnit(pop, push, this.Id);
 
             transitions.Add(tokenType, transitionUnit);
 
             return this;
         }
-        public State ConfigureOtherwiseTransition(State state, int? pop = null, int? push = null)
+        public State ConfigureOtherwiseTransition(int stateId, int? pop = null, int? push = null)
         {
-            otherwise = new TransitionUnit(pop, push, state);
+            otherwise = new TransitionUnit(pop, push, stateId);
             return this;
         }
         #endregion
 
-        public State Transit(uint tokenType)
+        public int Transit(uint tokenType)
         {
             if (!CanTransit(tokenType))
             {
-                return otherwise.State;
+                return otherwise.StateId;
             }
 
             var transitionUnit = transitions[tokenType];
@@ -80,7 +80,7 @@ namespace SyntaxAnalyzerPDA.PDA
             stack.PopValue(transitionUnit.Pop);
             stack.PushValue(transitionUnit.Push);
 
-            return transitionUnit.State;
+            return transitionUnit.StateId;
         }
 
         private bool CanTransit(uint tokenType)
