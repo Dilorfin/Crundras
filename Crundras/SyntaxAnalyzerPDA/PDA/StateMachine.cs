@@ -26,7 +26,9 @@ namespace SyntaxAnalyzerPDA.PDA
             state = new State(105, stack)
                 .ConfigureTransition(TokenTable.GetLexemeId("identifier"), 102)
                 .ConfigureTransition(TokenTable.GetLexemeId("int_literal"), 102)
-                .ConfigureTransition(TokenTable.GetLexemeId("float_literal"), 102);
+                .ConfigureTransition(TokenTable.GetLexemeId("float_literal"), 102)
+                .ConfigureTransition(TokenTable.GetLexemeId("("), 100, null, 103);
+
             states.Add(state.Id, state);
 
             state = new State(102, stack)
