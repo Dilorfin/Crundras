@@ -6,7 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\LexicalAnalyzer\LexicalAnalyzer.csproj" />
+    <ProjectReference Include="..\Crundras.Common\Crundras.Common.csproj" />
+    <ProjectReference Include="..\Crundras.LexicalAnalyzer\Crundras.LexicalAnalyzer.csproj" />
   </ItemGroup>
 
 </Project>

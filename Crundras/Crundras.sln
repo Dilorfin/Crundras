@@ -3,17 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29509.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Crundras", "Crundras\Crundras.csproj", "{19A58B6E-DC15-416E-9202-7AEB0E1856F4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Crundras.Common", "Crundras.Common\Crundras.Common.csproj", "{19A58B6E-DC15-416E-9202-7AEB0E1856F4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LexicalAnalyzer", "LexicalAnalyzer\LexicalAnalyzer.csproj", "{728A2A37-1EF5-43B0-8E04-BB42C5E20F1C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Crundras.LexicalAnalyzer", "Crundras.LexicalAnalyzer\Crundras.LexicalAnalyzer.csproj", "{728A2A37-1EF5-43B0-8E04-BB42C5E20F1C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Recursive descent parser", "Recursive descent parser\Recursive descent parser.csproj", "{3A805892-924C-464F-AA22-6854BC3F9F9F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecursiveDescentParser", "RecursiveDescentParser\RecursiveDescentParser.csproj", "{3A805892-924C-464F-AA22-6854BC3F9F9F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SyntaxAnalyzerPDA", "SyntaxAnalyzerPDA\SyntaxAnalyzerPDA.csproj", "{8C80849B-2A52-4925-9CF7-4DD36263B05E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntlrSyntax", "AntlrSyntax\AntlrSyntax.csproj", "{7BB7612C-0797-4B69-B79D-DA6F1014E4DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ANTLR", "ANTLR\ANTLR.csproj", "{7BB7612C-0797-4B69-B79D-DA6F1014E4DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReversePolishNotation", "ReversePolishNotation\ReversePolishNotation.csproj", "{71902BB3-2469-456E-B32E-D820040014A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReversePolishNotation", "ReversePolishNotation\ReversePolishNotation.csproj", "{71902BB3-2469-456E-B32E-D820040014A5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

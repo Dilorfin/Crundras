@@ -1,15 +1,24 @@
 ﻿using System.Collections.Generic;
 
-namespace Recursive_descent_parser
+namespace Crundras.Common
 {
     public class SyntaxTreeNode
     {
-        private List<SyntaxTreeNode> children = null;
+        /// <summary>
+        /// parent node
+        /// </summary>
+        public SyntaxTreeNode Parent { get; private set; }
+
+        /// <summary>
+        /// list of child nodes
+        /// </summary>
+        public List<SyntaxTreeNode> Children { get; private set; }
 
         /// <summary>
         /// node name
         /// </summary>
         public string Name { get; }
+
         /// <summary>
         /// id of identifier or literal
         /// </summary>
@@ -23,14 +32,15 @@ namespace Recursive_descent_parser
 
         public void AddChild(SyntaxTreeNode node)
         {
-            children ??= new List<SyntaxTreeNode>();
+            Children ??= new List<SyntaxTreeNode>();
 
-            children.Add(node);
+            node.SetParent(this);
+            Children.Add(node);
         }
 
-        public List<SyntaxTreeNode> GetChildren()
+        private void SetParent(SyntaxTreeNode parent)
         {
-            return children;
+            Parent = parent;
         }
     }
 }

@@ -1,15 +1,14 @@
-﻿using System;
-using System.IO;
-using Antlr4.Runtime;
+﻿using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
-
 using Crundras;
+using System;
+using System.IO;
 
-namespace AntlrSyntax
+namespace ANTLR
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             if (args.Length != 1)
             {
@@ -31,13 +30,13 @@ namespace AntlrSyntax
                 var lexer = new CrundrasLexer(stream);
 
                 var tokenStream = new CommonTokenStream(lexer);
-            
+
                 var parser = new CrundrasParser(tokenStream);
-            
-                var listener = new CrundrasListener();
+
+                CrundrasListener listener = new CrundrasListener();
 
                 var walker = new ParseTreeWalker();
-            
+
                 walker.Walk(listener, parser.program());
             }
             catch (Exception e)

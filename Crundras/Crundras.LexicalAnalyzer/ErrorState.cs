@@ -1,6 +1,6 @@
-﻿namespace LexicalAnalyzer
+﻿namespace Crundras.LexicalAnalyzer
 {
-    class ErrorState : State
+    internal class ErrorState : State
     {
         public string Message { get; }
 

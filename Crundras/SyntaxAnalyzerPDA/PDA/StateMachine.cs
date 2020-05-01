@@ -1,4 +1,4 @@
-﻿using LexicalAnalyzer;
+﻿using Crundras.Common;
 using System;
 using System.Collections.Generic;
 
@@ -18,7 +18,7 @@ namespace SyntaxAnalyzerPDA.PDA
             #region EXPRESSION
             state = new State(104, stack, true, false);
             states.Add(state.Id, state);
-            
+
             state = new State(103, stack)
                 .ConfigureTransition(TokenTable.GetLexemeId(")"), 102);
             states.Add(state.Id, state);
@@ -46,7 +46,7 @@ namespace SyntaxAnalyzerPDA.PDA
                 .ConfigureTransition(26, 105)
                 .ConfigureOtherwiseTransition(104);
             states.Add(state.Id, state);
-            
+
             state = new State(101, stack)
                 .ConfigureTransition(TokenTable.GetLexemeId("("), 100, null, 103)
                 .ConfigureTransition(TokenTable.GetLexemeId("identifier"), 102)

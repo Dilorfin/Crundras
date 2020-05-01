@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace LexicalAnalyzer
+namespace Crundras.Common
 {
     public class TokenTable
     {
-        public static readonly Dictionary<uint, string> CodesTable = new Dictionary<uint, string>
+        private static readonly Dictionary<uint, string> CodesTable = new Dictionary<uint, string>
         {
             { 4, "int"},
             { 5, "float"},
@@ -67,14 +67,7 @@ namespace LexicalAnalyzer
                 else
                 {
                     // 2 - int 3 - float
-                    if (stateId == 7)
-                    {
-                        token.Code = 2;
-                    }
-                    else
-                    {
-                        token.Code = 3;
-                    }
+                    token.Code = (uint)(stateId == 7 ? 2 : 3);
 
                     if (!LiteralsTable.ContainsValue(lexeme))
                     {
@@ -89,17 +82,41 @@ namespace LexicalAnalyzer
 
         public static string GetLexemeName(uint code)
         {
-            if (code == 1) return "identifier";
-            if (code == 2) return "int_literal";
-            if (code == 3) return "float_literal";
+            if (code == 1)
+            {
+                return "identifier";
+            }
+
+            if (code == 2)
+            {
+                return "int_literal";
+            }
+
+            if (code == 3)
+            {
+                return "float_literal";
+            }
+
             return CodesTable[code];
         }
 
         public static uint GetLexemeId(string lexeme)
         {
-            if (lexeme == "identifier") return 1;
-            if (lexeme == "int_literal") return 2;
-            if (lexeme == "float_literal") return 3;
+            if (lexeme == "identifier")
+            {
+                return 1;
+            }
+
+            if (lexeme == "int_literal")
+            {
+                return 2;
+            }
+
+            if (lexeme == "float_literal")
+            {
+                return 3;
+            }
+
             return CodesTable.First(p => p.Value == lexeme).Key;
         }
     }

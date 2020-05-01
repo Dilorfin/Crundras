@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace LexicalAnalyzer
+namespace Crundras.LexicalAnalyzer
 {
-    class State
+    internal class State
     {
         public int Id { get; }
 
@@ -43,7 +43,10 @@ namespace LexicalAnalyzer
         public State Transit(int charClass)
         {
             if (CanTransit(charClass))
+            {
                 return transitions[charClass];
+            }
+
             return otherwise;
         }
 

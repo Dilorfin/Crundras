@@ -1,4 +1,5 @@
-﻿using LexicalAnalyzer;
+﻿using Crundras.Common;
+using Crundras.LexicalAnalyzer;
 using System;
 using System.IO;
 
@@ -22,7 +23,7 @@ namespace SyntaxAnalyzerPDA
 
             try
             {
-                var tokensTable = new LexicalAnalyzer.LexicalAnalyzer().Analyze(args[0]);
+                var tokensTable = new LexicalAnalyzer().Analyze(args[0]);
 
                 var syntaxTree = new SyntaxAnalyzer(tokensTable).Analyze();
                 PrintSyntaxTree(tokensTable, syntaxTree);
@@ -52,12 +53,12 @@ namespace SyntaxAnalyzerPDA
             }
             Console.WriteLine();
 
-            if (node.GetChildren() == null)
+            if (node.Children == null)
             {
                 return;
             }
 
-            foreach (var child in node.GetChildren())
+            foreach (var child in node.Children)
             {
                 PrintSyntaxTree(tokensTable, child, level + 1);
             }

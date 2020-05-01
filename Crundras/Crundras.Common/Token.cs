@@ -1,4 +1,4 @@
-﻿namespace LexicalAnalyzer
+﻿namespace Crundras.Common
 {
     public struct Token
     {

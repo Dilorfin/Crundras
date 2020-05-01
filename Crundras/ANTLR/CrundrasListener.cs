@@ -1,11 +1,10 @@
-﻿using System;
-using Antlr4.Runtime;
+﻿using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
-
 using Crundras;
+using System;
 
-namespace AntlrSyntax
+namespace ANTLR
 {
     public class CrundrasListener : CrundrasBaseListener
     {
@@ -30,7 +29,7 @@ namespace AntlrSyntax
 
         public override void VisitErrorNode([NotNull] IErrorNode node)
         {
-            
+
         }
     }
 }

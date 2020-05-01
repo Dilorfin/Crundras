@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Crundras.Common;
+using System;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace LexicalAnalyzer
+namespace Crundras.LexicalAnalyzer
 {
     public class LexicalAnalyzer
     {
@@ -32,7 +33,9 @@ namespace LexicalAnalyzer
 
                 // counting lines
                 if (nextChar == '\n')
+                {
                     line++;
+                }
 
                 // checking for '*' states
                 if (stateMachine.CurrentState.TakeCharacter)
@@ -77,7 +80,9 @@ namespace LexicalAnalyzer
         private void CheckError(State state, char nextChar)
         {
             if (!state.IsError)
+            {
                 return;
+            }
 
             // character escaping
             string character = Regex.Escape(new string(nextChar, 1));

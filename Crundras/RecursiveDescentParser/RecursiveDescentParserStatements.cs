@@ -1,6 +1,6 @@
-﻿using LexicalAnalyzer;
+﻿using Crundras.Common;
 
-namespace Recursive_descent_parser
+namespace RecursiveDescentParser
 {
     public partial class RecursiveDescentParser
     {

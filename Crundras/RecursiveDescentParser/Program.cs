@@ -1,8 +1,9 @@
-﻿using LexicalAnalyzer;
+﻿using Crundras.Common;
+using Crundras.LexicalAnalyzer;
 using System;
 using System.IO;
 
-namespace Recursive_descent_parser
+namespace RecursiveDescentParser
 {
     internal class Program
     {
@@ -22,7 +23,7 @@ namespace Recursive_descent_parser
 
             try
             {
-                var tokensTable = new LexicalAnalyzer.LexicalAnalyzer().Analyze(args[0]);
+                var tokensTable = new LexicalAnalyzer().Analyze(args[0]);
 
                 var syntaxTree = new RecursiveDescentParser(tokensTable).Analyze();
                 PrintSyntaxTree(tokensTable, syntaxTree);
@@ -47,12 +48,12 @@ namespace Recursive_descent_parser
             }
             Console.WriteLine();
 
-            if (node.GetChildren() == null)
+            if (node.Children == null)
             {
                 return;
             }
 
-            foreach (var child in node.GetChildren())
+            foreach (var child in node.Children)
             {
                 PrintSyntaxTree(tokensTable, child, level + 1);
             }

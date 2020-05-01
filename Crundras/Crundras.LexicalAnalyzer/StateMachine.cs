@@ -1,6 +1,6 @@
-﻿namespace LexicalAnalyzer
+﻿namespace Crundras.LexicalAnalyzer
 {
-    class StateMachine
+    internal class StateMachine
     {
         private readonly State[] states = new State[22];
         private readonly State initialState;
