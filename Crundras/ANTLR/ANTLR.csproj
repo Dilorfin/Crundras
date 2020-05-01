@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="java -jar  $(SolutionDir)..\Programs\Antlr\antlr-4.8-complete.jar -Dlanguage=CSharp $(SolutionDir)..\Artifacts\Crundras.g4 -Werror -package Crundras -o $(SolutionDir)AntlrSyntax\ANTLR\" />
+    <Exec Command="java -jar  $(SolutionDir)..\Programs\Antlr\antlr-4.8-complete.jar -Dlanguage=CSharp $(SolutionDir)..\Artifacts\Crundras.g4 -Werror -package Crundras -o $(SolutionDir)$(ProjectName)\ANTLR\" />
   </Target>
 
 </Project>
