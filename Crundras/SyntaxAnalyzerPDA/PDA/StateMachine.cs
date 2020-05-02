@@ -16,54 +16,69 @@ namespace SyntaxAnalyzerPDA.PDA
             State state;
 
             #region EXPRESSION
-            state = new State(104, stack, true, false);
+            state = new State(105, stack, true, false);
             states.Add(state.Id, state);
 
             state = new State(103, stack)
-                .ConfigureTransition(TokenTable.GetLexemeId(")"), 102);
+                .ConfigureTransition(TokenTable.GetLexemeId("("), 106, null, ')')
+                .ConfigureTransition(TokenTable.GetLexemeId("+"), 102)
+                .ConfigureTransition(TokenTable.GetLexemeId("-"), 102)
+                .ConfigureTransition(TokenTable.GetLexemeId("identifier"), 104)
+                .ConfigureTransition(TokenTable.GetLexemeId("int_literal"), 104)
+                .ConfigureTransition(TokenTable.GetLexemeId("float_literal"), 104);
+
             states.Add(state.Id, state);
 
-            state = new State(105, stack)
-                .ConfigureTransition(TokenTable.GetLexemeId("+"), 101)
-                .ConfigureTransition(TokenTable.GetLexemeId("-"), 101)
-                .ConfigureTransition(TokenTable.GetLexemeId("identifier"), 102)
-                .ConfigureTransition(TokenTable.GetLexemeId("int_literal"), 102)
-                .ConfigureTransition(TokenTable.GetLexemeId("float_literal"), 102)
-                .ConfigureTransition(TokenTable.GetLexemeId("("), 100, null, 103);
-
+            state = new State(104, stack)
+                .ConfigureSelfTransition(TokenTable.GetLexemeId(")"), ')')
+                .ConfigureTransition(15, 103)
+                .ConfigureTransition(16, 103)
+                .ConfigureTransition(17, 103)
+                .ConfigureTransition(18, 103)
+                .ConfigureTransition(19, 103)
+                .ConfigureTransition(20, 103)
+                .ConfigureTransition(21, 103)
+                .ConfigureTransition(22, 103)
+                .ConfigureTransition(23, 103)
+                .ConfigureTransition(24, 103)
+                .ConfigureTransition(25, 103)
+                .ConfigureTransition(26, 103)
+                .ConfigureOtherwiseTransition(105);
             states.Add(state.Id, state);
 
             state = new State(102, stack)
-                .ConfigureTransition(15, 105)
-                .ConfigureTransition(16, 105)
-                .ConfigureTransition(17, 105)
-                .ConfigureTransition(18, 105)
-                .ConfigureTransition(19, 105)
-                .ConfigureTransition(20, 105)
-                .ConfigureTransition(21, 105)
-                .ConfigureTransition(22, 105)
-                .ConfigureTransition(23, 105)
-                .ConfigureTransition(24, 105)
-                .ConfigureTransition(25, 105)
-                .ConfigureTransition(26, 105)
-                .ConfigureOtherwiseTransition(104);
+                .ConfigureTransition(TokenTable.GetLexemeId("("), 106, null, ')')
+                .ConfigureTransition(TokenTable.GetLexemeId("identifier"), 104)
+                .ConfigureTransition(TokenTable.GetLexemeId("int_literal"), 104)
+                .ConfigureTransition(TokenTable.GetLexemeId("float_literal"), 104);
             states.Add(state.Id, state);
 
-            state = new State(101, stack)
-                .ConfigureTransition(TokenTable.GetLexemeId("("), 100, null, 103)
-                .ConfigureTransition(TokenTable.GetLexemeId("identifier"), 102)
-                .ConfigureTransition(TokenTable.GetLexemeId("int_literal"), 102)
-                .ConfigureTransition(TokenTable.GetLexemeId("float_literal"), 102);
+            state = new State(106, stack)
+                .ConfigureTransition(TokenTable.GetLexemeId("+"), 102)
+                .ConfigureTransition(TokenTable.GetLexemeId("-"), 102)
+                .ConfigureTransition(TokenTable.GetLexemeId("identifier"), 101)
+                .ConfigureTransition(TokenTable.GetLexemeId("int_literal"), 101)
+                .ConfigureTransition(TokenTable.GetLexemeId("float_literal"), 101)
+                .ConfigureSelfTransition(TokenTable.GetLexemeId("("), null, ')');
             states.Add(state.Id, state);
 
-            state = new State(100, stack)
+            state = new State(101, stack, false, false)
+                .ConfigureTransition(TokenTable.GetLexemeId("+"), 102)
+                .ConfigureTransition(TokenTable.GetLexemeId("-"), 102)
+                .ConfigureTransition(TokenTable.GetLexemeId("identifier"), 104)
+                .ConfigureTransition(TokenTable.GetLexemeId("int_literal"), 104)
+                .ConfigureTransition(TokenTable.GetLexemeId("float_literal"), 104)
+                .ConfigureTransition(TokenTable.GetLexemeId("("), 106, null, ')');
+
+            states.Add(state.Id, state);
+
+            states[100] = new State(100, stack)
                 .ConfigureTransition(TokenTable.GetLexemeId("+"), 101)
                 .ConfigureTransition(TokenTable.GetLexemeId("-"), 101)
-                .ConfigureTransition(TokenTable.GetLexemeId("identifier"), 102)
-                .ConfigureTransition(TokenTable.GetLexemeId("int_literal"), 102)
-                .ConfigureTransition(TokenTable.GetLexemeId("float_literal"), 102)
-                .ConfigureSelfTransition(TokenTable.GetLexemeId("("), null, 103);
-            states.Add(state.Id, state);
+                .ConfigureTransition(TokenTable.GetLexemeId("identifier"), 101)
+                .ConfigureTransition(TokenTable.GetLexemeId("int_literal"), 101)
+                .ConfigureTransition(TokenTable.GetLexemeId("float_literal"), 101)
+                .ConfigureTransition(TokenTable.GetLexemeId("("), 101);
 
             #endregion
 
@@ -168,12 +183,14 @@ namespace SyntaxAnalyzerPDA.PDA
             if (!CurrentState.IsFinal)
             {
                 var previousState = CurrentState;
-                CurrentState = states[CurrentState.Transit(tokenType)];
-                if (CurrentState == null)
+                var nextStateId = CurrentState.Transit(tokenType);
+                
+                if(!states.ContainsKey(nextStateId))
                 {
                     throw new Exception($"lexeme: {TokenTable.GetLexemeName(tokenType)}. state: {previousState.Id}");
                 }
-
+                CurrentState = states[nextStateId];
+                
                 return;
             }
 
@@ -184,6 +201,14 @@ namespace SyntaxAnalyzerPDA.PDA
             else
             {
                 int nextStateId = stack.Pop();
+                if (!states.ContainsKey(nextStateId))
+                {
+                    if (char.IsControl((char) nextStateId))
+                    {
+                        throw new Exception($"Tried to jump to: \'{nextStateId}\', but something went wrong");
+                    }
+                    throw new Exception($"Something forgotten in stack: \'{(char)nextStateId}\'");
+                }
                 CurrentState = states[nextStateId];
             }
 
