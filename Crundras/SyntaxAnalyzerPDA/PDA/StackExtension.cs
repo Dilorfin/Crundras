@@ -13,12 +13,17 @@ namespace SyntaxAnalyzerPDA.PDA
             }
 
             var poppedValue = stack.Pop();
-            if (poppedValue != value.Value)
+            if (poppedValue == value.Value)
             {
-                throw new Exception("Stack error");
+                return poppedValue;
             }
 
-            return poppedValue;
+            if (char.IsControl((char)value.Value))
+            {
+                throw new Exception($"Stack error. Expected \'{value.Value}\'");
+            }
+
+            throw new Exception($"Stack error. Expected \'{(char)value.Value}\'");
         }
 
         public static void PushValue(this Stack<int> stack, int? value)
