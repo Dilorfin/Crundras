@@ -180,39 +180,38 @@ namespace SyntaxAnalyzerPDA.PDA
 
         public void NextState(uint tokenType)
         {
-            if (!CurrentState.IsFinal)
+            int nextStateId;
+            while (CurrentState.IsFinal)
             {
-                var previousState = CurrentState;
-                var nextStateId = CurrentState.Transit(tokenType);
-                
-                if(!states.ContainsKey(nextStateId))
+                if (stack.Count == 0)
                 {
-                    throw new Exception($"lexeme: {TokenTable.GetLexemeName(tokenType)}. state: {previousState.Id}");
+                    CurrentState = states[0];
+                    break;
                 }
-                CurrentState = states[nextStateId];
-                
-                return;
-            }
 
-            if (stack.Count == 0)
-            {
-                CurrentState = states[0];
-            }
-            else
-            {
-                int nextStateId = stack.Pop();
-                if (!states.ContainsKey(nextStateId))
+                nextStateId = stack.Pop();
+                if (states.ContainsKey(nextStateId))
                 {
-                    if (char.IsControl((char) nextStateId))
-                    {
-                        throw new Exception($"Tried to jump to: \'{nextStateId}\', but something went wrong");
-                    }
-                    throw new Exception($"Something forgotten in stack: \'{(char)nextStateId}\'");
+                    CurrentState = states[nextStateId];
+                    continue;
                 }
-                CurrentState = states[nextStateId];
-            }
 
-            NextState(tokenType);
+                if (char.IsControl((char) nextStateId))
+                {
+                    throw new Exception($"Tried to jump to: \'{nextStateId}\', but something went wrong");
+                }
+
+                throw new Exception($"Something forgotten in stack: \'{(char) nextStateId}\'");
+            }
+            
+            var previousState = CurrentState;
+            nextStateId = CurrentState.Transit(tokenType);
+                
+            if(!states.ContainsKey(nextStateId))
+            {
+                throw new Exception($"lexeme: {TokenTable.GetLexemeName(tokenType)}. state: {previousState.Id}");
+            }
+            CurrentState = states[nextStateId];
         }
     }
 }
