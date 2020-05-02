@@ -78,17 +78,47 @@ namespace Crundras.LexicalAnalyzer.FSM
                 .ConfigureTransition('*', 20)
                 .ConfigureOtherwiseTransition(21);
 
+            // comments
+            states[204] = new ErrorState(204, "Expected end of the comment (\"*/\")");
+            
+            states[28] = new State(28, true);
+
+            states[27] = new State(27)
+                .ConfigureTransition('\n', 28)
+                .ConfigureTransition('\r', 28)
+                .ConfigureOtherwiseSelfTransition();
+
+            states[26] = new State(26, true);
+
+            states[25] = new State(25)
+                .ConfigureTransition('\0', 204)
+                .ConfigureTransition('/', 26)
+                .ConfigureOtherwiseTransition(24);
+
+            states[24] = new State(24)
+                .ConfigureTransition('\0', 204)
+                .ConfigureTransition('*', 25)
+                .ConfigureOtherwiseSelfTransition();
+
+            states[23] = new State(23, true, false);
+
+            states[22] = new State(22)
+                .ConfigureTransition('*', 24)
+                .ConfigureTransition('/', 27)
+                .ConfigureOtherwiseTransition(23);
+
             states[200] = new ErrorState(200, "Unknown symbol");
 
             // I am root
             states[0] = new State(0)
                 .ConfigureSelfTransition(3)
                 .ConfigureSelfTransition('\0')
+                .ConfigureSelfTransition('\r')
+                .ConfigureSelfTransition('\n')
                 .ConfigureTransition('$', 1)
                 .ConfigureTransition('@', 1)
                 .ConfigureTransition('+', 1)
                 .ConfigureTransition('-', 1)
-                .ConfigureTransition('/', 1)
                 .ConfigureTransition('%', 1)
                 .ConfigureTransition('(', 1)
                 .ConfigureTransition(')', 1)
@@ -102,6 +132,7 @@ namespace Crundras.LexicalAnalyzer.FSM
                 .ConfigureTransition('>', 14)
                 .ConfigureTransition('!', 17)
                 .ConfigureTransition('*', 19)
+                .ConfigureTransition('/', 22)
                 .ConfigureOtherwiseTransition(200);
 
             CurrentState = states[0];

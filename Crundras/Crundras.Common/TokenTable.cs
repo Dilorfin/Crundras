@@ -44,6 +44,12 @@ namespace Crundras.Common
 
         public void AddToken(uint line, string lexeme, int stateId)
         {
+            // skip comments
+            if (stateId == 26 || stateId == 28)
+            {
+                return;
+            }
+
             var token = new Token { Line = line, Lexeme = lexeme, ForeignId = 0 };
 
             // checking if lexeme is language specific

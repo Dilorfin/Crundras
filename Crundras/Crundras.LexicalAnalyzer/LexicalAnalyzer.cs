@@ -100,7 +100,7 @@ namespace Crundras.LexicalAnalyzer
             {
                 charClass = 2;
             }
-            else if (char.IsWhiteSpace(c))
+            else if (char.IsWhiteSpace(c) && !("\r\n").Contains(c))
             {
                 charClass = 3;
             }
