@@ -6,8 +6,8 @@ namespace Crundras.LexicalAnalyzer.FSM
     {
         public int Id { get; }
 
-        private readonly Dictionary<int, State> transitions = new Dictionary<int, State>();
-        private State otherwise = null;
+        private readonly Dictionary<int, int> transitions = new Dictionary<int, int>();
+        private int? otherwiseId;
 
         public State(int id, bool isFinal = false, bool takeCharacter = true)
         {
@@ -16,38 +16,39 @@ namespace Crundras.LexicalAnalyzer.FSM
             this.TakeCharacter = takeCharacter;
         }
 
-        public State ConfigureTransition(int charClass, State nextState)
+        public State ConfigureTransition(int charClass, int nextStateId)
         {
             if (!CanTransit(charClass))
             {
-                transitions.Add(charClass, nextState);
+                transitions.Add(charClass, nextStateId);
             }
 
             return this;
         }
+        
+        public State ConfigureOtherwiseTransition(int nextStateId)
+        {
+            otherwiseId = nextStateId;
+            return this;
+        }
+
         public State ConfigureSelfTransition(int charClass)
         {
-            if (!CanTransit(charClass))
-            {
-                transitions.Add(charClass, this);
-            }
-
-            return this;
+            return ConfigureTransition(charClass, this.Id);
         }
-        public State ConfigureOtherwiseTransition(State state)
+        public State ConfigureOtherwiseSelfTransition()
         {
-            otherwise = state;
-            return this;
+            return ConfigureOtherwiseTransition(this.Id);
         }
 
-        public State Transit(int charClass)
+        public int? Transit(int charClass)
         {
             if (CanTransit(charClass))
             {
                 return transitions[charClass];
             }
 
-            return otherwise;
+            return otherwiseId;
         }
 
         private bool CanTransit(int charClass)
