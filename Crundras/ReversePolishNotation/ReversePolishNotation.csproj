@@ -6,7 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\LexicalAnalyzer\LexicalAnalyzer.csproj" />
+    <ProjectReference Include="..\Crundras.LexicalAnalyzer\Crundras.LexicalAnalyzer.csproj" />
+    <ProjectReference Include="..\RecursiveDescentParser\RecursiveDescentParser.csproj" />
+    <ProjectReference Include="..\SyntaxAnalyzerPDA\SyntaxAnalyzerPDA.csproj" />
   </ItemGroup>
 
 </Project>

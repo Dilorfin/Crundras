@@ -1,38 +1,13 @@
-﻿using LexicalAnalyzer;
+﻿using Crundras.LexicalAnalyzer;
+using SyntaxAnalyzerPDA;
 using System;
-using System.Collections.Generic;
 using System.IO;
 
 namespace ReversePolishNotation
 {
-    internal class SyntaxAnalyzerRPN
-    {
-        private Stack<Token> stack = new Stack<Token>();
-        private LinkedList<Token> result = new LinkedList<Token>();
-
-        private readonly Dictionary<uint, int> priorityTable = new Dictionary<uint, int>
-        {
-            { TokenTable.GetLexemeId("("), 0 }
-        };
-
-        void NextToken(Token token)
-        {
-
-        }
-
-        public static void Analyze(TokenTable tokenTable)
-        {
-            var syntaxAnalyzerRpn = new SyntaxAnalyzerRPN();
-            foreach (var token in tokenTable.TokensList)
-            {
-                syntaxAnalyzerRpn.NextToken(token);
-            }
-        }
-    }
-
     internal static class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             if (args.Length != 1)
             {
@@ -46,10 +21,20 @@ namespace ReversePolishNotation
                 return;
             }
 
-            var tokenTable = new LexicalAnalyzer.LexicalAnalyzer().Analyze(args[0]);
+            try
+            {
+                var tokensTable = LexicalAnalyzer.AnalyzeFile(args[0]);
 
-            SyntaxAnalyzerRPN.Analyze(tokenTable);
-
+                var syntaxTree = SyntaxAnalyzer.Analyze(tokensTable);
+                foreach (var rpnToken in RPNTranslator.Analyze(syntaxTree))
+                {
+                    Console.WriteLine(rpnToken.Name);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
 
             Console.ReadKey();
         }
