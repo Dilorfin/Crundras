@@ -7,23 +7,37 @@ namespace SyntaxAnalyzerPDA
 {
     public class SyntaxAnalyzer
     {
-        private LinkedListNode<Token> tokenListNode;
-        private readonly SyntaxTreeRootNode syntaxTree = new SyntaxTreeRootNode();
+        private readonly StateMachine stateMachine;
 
-        public SyntaxAnalyzer(TokenTable tokenTable)
+        public SyntaxTreeRootNode RootTreeNode { get; }
+        public SyntaxTreeNode CurrentTreeNode { get; private set; }
+
+        public SyntaxAnalyzer()
         {
-            this.tokenListNode = tokenTable.TokensList.First;
+            RootTreeNode = new SyntaxTreeRootNode();
+            CurrentTreeNode = RootTreeNode;
+            
+            stateMachine = new StateMachine();
         }
 
-        public SyntaxTreeRootNode Analyze()
+        public static SyntaxTreeRootNode Analyze(TokenTable tokenTable)
         {
-            var stateMachine = new StateMachine();
+            var analyzer = new SyntaxAnalyzer();
 
-            SyntaxTreeNode syntaxTreeNode = syntaxTree;
-
+            LinkedListNode<Token> tokenListNode = tokenTable.TokensList.First;
             while (tokenListNode != null)
             {
-                var token = tokenListNode.Value;
+                analyzer.Analyze(tokenListNode.Value);
+                tokenListNode = tokenListNode.Next;
+            }
+
+            return analyzer.RootTreeNode;
+        }
+
+        public void Analyze(Token token)
+        {
+            do
+            {
                 stateMachine.NextState(token.Code);
 
                 if (stateMachine.CurrentState.IsError)
@@ -36,25 +50,21 @@ namespace SyntaxAnalyzerPDA
 
                 if (stateMachine.CurrentState.TakeToken)
                 {
-                    syntaxTreeNode.AddChild(child);
+                    CurrentTreeNode.AddChild(child);
 
                     if (stateMachine.CurrentState.IsLevelStart)
                     {
-                        syntaxTreeNode = child;
+                        CurrentTreeNode = child;
                     }
-
-                    tokenListNode = tokenListNode.Next;
                 }
-
 
                 if (stateMachine.CurrentState.IsFinal
-                         && syntaxTreeNode.Parent != null)
+                    && CurrentTreeNode.Parent != null)
                 {
-                    syntaxTreeNode = syntaxTreeNode.Parent;
+                    CurrentTreeNode = CurrentTreeNode.Parent;
                 }
-            }
-
-            return syntaxTree;
+            } 
+            while (!stateMachine.CurrentState.TakeToken);
         }
     }
 }
