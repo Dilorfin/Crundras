@@ -7,10 +7,6 @@
         /// </summary>
         public uint Line;
         /// <summary>
-        /// just lexeme
-        /// </summary>
-        public string Lexeme;
-        /// <summary>
         /// token code in tokens table in specification
         /// </summary>
         public uint Code;

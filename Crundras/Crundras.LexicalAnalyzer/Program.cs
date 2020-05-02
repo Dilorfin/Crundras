@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Crundras.Common;
 
 namespace Crundras.LexicalAnalyzer
 {
@@ -25,7 +26,7 @@ namespace Crundras.LexicalAnalyzer
 
                 foreach (var token in tokensTable.TokensList)
                 {
-                    Console.Write($"{token.Line,15} {token.Lexeme,40} {token.Code,10}");
+                    Console.Write($"{token.Line,15} {TokenTable.GetLexemeName(token.Code),40} {token.Code,10}");
                     if (token.ForeignId.HasValue)
                     {
                         Console.Write($"{token.ForeignId.Value,3}");
