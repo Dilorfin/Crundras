@@ -2,14 +2,6 @@
 
 namespace Crundras.Common
 {
-    public sealed class SyntaxTreeRootNode : SyntaxTreeNode
-    {
-        public override string Name => "root";
-
-        public SyntaxTreeRootNode() : base(uint.MaxValue)
-        { }
-    }
-
     public class SyntaxTreeNode
     {
         /// <summary>
@@ -21,11 +13,6 @@ namespace Crundras.Common
         /// list of child nodes
         /// </summary>
         public List<SyntaxTreeNode> Children { get; private set; }
-
-        /// <summary>
-        /// lexeme name
-        /// </summary>
-        public virtual string Name => TokenTable.GetLexemeName(LexemeCode);
 
         /// <summary>
         /// lexeme code

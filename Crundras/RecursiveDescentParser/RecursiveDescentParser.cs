@@ -21,7 +21,7 @@ namespace RecursiveDescentParser
 
         private SyntaxTreeNode _Program()
         {
-            SyntaxTreeNode node = new SyntaxTreeRootNode();
+            SyntaxTreeNode node = new SyntaxTreeNode(uint.MaxValue);
 
             while (tokenListNode != null)
             {

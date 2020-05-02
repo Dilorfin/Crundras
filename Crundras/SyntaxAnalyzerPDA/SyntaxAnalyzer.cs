@@ -9,18 +9,18 @@ namespace SyntaxAnalyzerPDA
     {
         private readonly StateMachine stateMachine;
 
-        public SyntaxTreeRootNode RootTreeNode { get; }
+        public SyntaxTreeNode RootTreeNode { get; }
         public SyntaxTreeNode CurrentTreeNode { get; private set; }
 
         public SyntaxAnalyzer()
         {
-            RootTreeNode = new SyntaxTreeRootNode();
+            RootTreeNode = new SyntaxTreeNode(uint.MaxValue);
             CurrentTreeNode = RootTreeNode;
-            
+
             stateMachine = new StateMachine();
         }
 
-        public static SyntaxTreeRootNode Analyze(TokenTable tokenTable)
+        public static SyntaxTreeNode Analyze(TokenTable tokenTable)
         {
             var analyzer = new SyntaxAnalyzer();
 
@@ -63,8 +63,8 @@ namespace SyntaxAnalyzerPDA
                 {
                     CurrentTreeNode = CurrentTreeNode.Parent;
                 }
-            } 
-            while (!stateMachine.CurrentState.TakeToken);
+
+            } while (!stateMachine.CurrentState.TakeToken);
         }
     }
 }

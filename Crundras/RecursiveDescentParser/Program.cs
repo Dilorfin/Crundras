@@ -43,15 +43,18 @@ namespace RecursiveDescentParser
                 return;
             }
 
-            Console.Write($"{new string('-', level)} {node.Name} ");
-            if (node.Id.HasValue)
+            if (node.LexemeCode != uint.MaxValue)
             {
-                Console.Write(node.Name == "identifier"
-                    ? $"\"{tokensTable.IdentifiersTable[node.Id.Value]}\""
-                    : $"\"{tokensTable.LiteralsTable[node.Id.Value]}\"");
-                Console.Write($" ({node.Id.Value})");
+                Console.Write($"{new string('-', level)} {TokenTable.GetLexemeName(node.LexemeCode)} ");
+                if (node.Id.HasValue)
+                {
+                    Console.Write(node.LexemeCode == TokenTable.GetLexemeId("identifier")
+                        ? $"\"{tokensTable.IdentifiersTable[node.Id.Value]}\""
+                        : $"\"{tokensTable.LiteralsTable[node.Id.Value]}\"");
+                    Console.Write($" ({node.Id.Value})");
+                }
+                Console.WriteLine();
             }
-            Console.WriteLine();
 
             if (node.Children == null)
             {
