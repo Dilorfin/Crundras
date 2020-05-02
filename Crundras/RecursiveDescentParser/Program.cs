@@ -23,7 +23,7 @@ namespace RecursiveDescentParser
 
             try
             {
-                var tokensTable = new LexicalAnalyzer().Analyze(args[0]);
+                var tokensTable = LexicalAnalyzer.AnalyzeFile(args[0]);
 
                 var syntaxTree = new RecursiveDescentParser(tokensTable).Analyze();
                 PrintSyntaxTree(tokensTable, syntaxTree);

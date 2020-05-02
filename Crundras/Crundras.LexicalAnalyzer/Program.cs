@@ -21,7 +21,7 @@ namespace Crundras.LexicalAnalyzer
 
             try
             {
-                var tokensTable = new LexicalAnalyzer().Analyze(args[0]);
+                var tokensTable = LexicalAnalyzer.AnalyzeFile(args[0]);
 
                 foreach (var token in tokensTable.TokensList)
                 {

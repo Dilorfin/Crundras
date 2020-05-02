@@ -9,28 +9,39 @@ namespace Crundras.LexicalAnalyzer
 {
     public class LexicalAnalyzer
     {
-        private readonly StateMachine stateMachine = new StateMachine();
-        private readonly TokenTable tokenTable = new TokenTable();
+        private readonly StringBuilder stringBuilder;
+        private readonly StateMachine stateMachine;
+        private State CurrentState => stateMachine.CurrentState;
+
+        public TokenTable TokenTable { get; }
 
         private uint line = 1;
-
-        public TokenTable Analyze(string fileName)
+        
+        public LexicalAnalyzer()
         {
-            using var file = new StreamReader(fileName, true);
+            this.TokenTable = new TokenTable();
+            this.stateMachine = new StateMachine();
+            this.stringBuilder = new StringBuilder();
+        }
 
-            StringBuilder builder = new StringBuilder();
-
-            while (!file.EndOfStream)
+        public void NextChar(char nextChar)
+        {
+            do
             {
-                // looking throw next character
-                char nextChar = (char)file.Peek();
-
                 int charClass = GetCharClass(nextChar);
                 // transiting state machine to next state
                 stateMachine.NextState(charClass);
 
                 // checking if error has occurred
-                CheckError(stateMachine.CurrentState, nextChar);
+                if (CurrentState.IsError)
+                {
+                    // character escaping
+                    string character = Regex.Escape(new string(nextChar, 1));
+                    // displaying error message
+                    string message = (CurrentState as ErrorState)?.Message;
+
+                    throw new Exception($"{message}. Character: '{character}'. Line: {line}.");
+                }
 
                 // counting lines
                 if (nextChar == '\n')
@@ -39,60 +50,45 @@ namespace Crundras.LexicalAnalyzer
                 }
 
                 // checking for '*' states
-                if (stateMachine.CurrentState.TakeCharacter)
+                if (CurrentState.TakeCharacter)
                 {
-                    builder.Append((char)file.Read());
+                    stringBuilder.Append(nextChar);
                 }
-                // adding lexeme to table in final state
-                if (stateMachine.CurrentState.IsFinal)
+                // adding lexeme to table in final states
+                if (CurrentState.IsFinal)
                 {
-                    AddLexeme(builder.ToString());
-                    builder.Clear();
+                    var lexeme = stringBuilder.ToString();
+                    TokenTable.AddToken(line, lexeme, CurrentState.Id);
+                    stringBuilder.Clear();
                 }
 
                 // clearing builder at 0 state, needed in case of self transiting
-                if (stateMachine.CurrentState.Id == 0)
+                if (CurrentState.Id == 0)
                 {
-                    builder.Clear();
+                    stringBuilder.Clear();
                 }
+            } 
+            while (!CurrentState.TakeCharacter);
+        }
+
+        public static TokenTable AnalyzeFile(string fileName)
+        {
+            using var file = new StreamReader(fileName, true);
+            var analyzer = new LexicalAnalyzer();
+            
+            while (!file.EndOfStream)
+            {
+                analyzer.NextChar((char) file.Read());
             }
 
             // '\0' - last character
-            char lastChar = '\0';
-            stateMachine.NextState(lastChar);
-            CheckError(stateMachine.CurrentState, lastChar);
-
-            if (stateMachine.CurrentState.IsFinal)
-            {
-                AddLexeme(builder.ToString());
-                builder.Clear();
-            }
+            analyzer.NextChar('\0');
 
             file.Close();
 
-            return tokenTable;
+            return analyzer.TokenTable;
         }
-
-        private void AddLexeme(string lexeme)
-        {
-            tokenTable.AddToken(line, lexeme, stateMachine.CurrentState.Id);
-        }
-
-        private void CheckError(State state, char nextChar)
-        {
-            if (!state.IsError)
-            {
-                return;
-            }
-
-            // character escaping
-            string character = Regex.Escape(new string(nextChar, 1));
-            // displaying error message
-            string message = (state as ErrorState)?.Message;
-
-            throw new Exception($"{message}. Character: '{character}'. Line: {line}.");
-        }
-
+        
         private static int GetCharClass(char c)
         {
             int charClass = c;
