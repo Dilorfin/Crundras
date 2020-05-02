@@ -21,7 +21,7 @@ namespace RecursiveDescentParser
 
         private SyntaxTreeNode _Program()
         {
-            SyntaxTreeNode node = new SyntaxTreeNode("statements");
+            SyntaxTreeNode node = new SyntaxTreeRootNode();
 
             while (tokenListNode != null)
             {
@@ -31,10 +31,7 @@ namespace RecursiveDescentParser
             return node;
         }
 
-        private uint GetTokenCode()
-        {
-            return tokenListNode.Value.Code;
-        }
+        private uint TokenCode => tokenListNode.Value.Code;
 
         private void CheckUnexpectedEnd()
         {
@@ -55,9 +52,9 @@ namespace RecursiveDescentParser
         {
             CheckUnexpectedEnd();
 
-            if (tokenCodes.All(tokenCode => GetTokenCode() != tokenCode))
+            if (tokenCodes.All(tokenCode => TokenCode != tokenCode))
             {
-                throw new Exception($"Expected {expected} but found \"{TokenTable.GetLexemeName(GetTokenCode())}\" in line {tokenListNode.Value.Line}.");
+                throw new Exception($"Expected {expected} but found \"{TokenTable.GetLexemeName(TokenCode)}\" in line {tokenListNode.Value.Line}.");
             }
 
             var token = tokenListNode.Value;
@@ -69,10 +66,10 @@ namespace RecursiveDescentParser
         {
             CheckUnexpectedEnd();
 
-            if (GetTokenCode() != tokenCode)
+            if (TokenCode != tokenCode)
             {
                 throw new Exception($"Expected \"{TokenTable.GetLexemeName(tokenCode)}\" " +
-                                    $"but found \"{TokenTable.GetLexemeName(GetTokenCode())}\" " +
+                                    $"but found \"{TokenTable.GetLexemeName(TokenCode)}\" " +
                                     $"in line {tokenListNode.Value.Line}.");
             }
 

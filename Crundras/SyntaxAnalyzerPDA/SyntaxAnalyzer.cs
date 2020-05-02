@@ -8,18 +8,18 @@ namespace SyntaxAnalyzerPDA
     public class SyntaxAnalyzer
     {
         private LinkedListNode<Token> tokenListNode;
-        private readonly SyntaxTreeNode syntaxTree = new SyntaxTreeNode("statements");
+        private readonly SyntaxTreeRootNode syntaxTree = new SyntaxTreeRootNode();
 
         public SyntaxAnalyzer(TokenTable tokenTable)
         {
             this.tokenListNode = tokenTable.TokensList.First;
         }
 
-        public SyntaxTreeNode Analyze()
+        public SyntaxTreeRootNode Analyze()
         {
             var stateMachine = new StateMachine();
 
-            var syntaxTreeNode = syntaxTree;
+            SyntaxTreeNode syntaxTreeNode = syntaxTree;
 
             while (tokenListNode != null)
             {
@@ -32,7 +32,7 @@ namespace SyntaxAnalyzerPDA
                     throw new Exception(message);
                 }
 
-                var child = new SyntaxTreeNode(token.Lexeme);
+                var child = new SyntaxTreeNode(token);
 
                 if (stateMachine.CurrentState.TakeToken)
                 {
@@ -52,8 +52,6 @@ namespace SyntaxAnalyzerPDA
                 {
                     syntaxTreeNode = syntaxTreeNode.Parent;
                 }
-
-                //Console.WriteLine(token.Lexeme);
             }
 
             return syntaxTree;

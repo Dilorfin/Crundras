@@ -26,9 +26,9 @@ namespace Crundras.LexicalAnalyzer
                 foreach (var token in tokensTable.TokensList)
                 {
                     Console.Write($"{token.Line,15} {token.Lexeme,40} {token.Code,10}");
-                    if (token.ForeignId != 0)
+                    if (token.ForeignId.HasValue)
                     {
-                        Console.Write($"{token.ForeignId,3}");
+                        Console.Write($"{token.ForeignId.Value,3}");
                     }
                     Console.WriteLine();
                 }

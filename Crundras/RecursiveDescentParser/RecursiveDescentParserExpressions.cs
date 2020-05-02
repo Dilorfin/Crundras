@@ -1,40 +1,35 @@
 ﻿using Crundras.Common;
 using System;
+using System.Collections.Generic;
 
 namespace RecursiveDescentParser
 {
     public partial class RecursiveDescentParser
     {
         // Expression = [Sign] ( '(' Expression ')' | Literal | Identifier ) { Operator [Sign] ( '(' Expression ')' | Literal | Identifier ) }.
-        private SyntaxTreeNode Expression()
+        private LinkedList<SyntaxTreeNode> Expression()
         {
-            SyntaxTreeNode node = new SyntaxTreeNode("expression");
+            LinkedList<SyntaxTreeNode> node = new LinkedList<SyntaxTreeNode>();
 
-            if (GetTokenCode() == TokenTable.GetLexemeId("+"))
+            if (TokenCode == TokenTable.GetLexemeId("+") || TokenCode == TokenTable.GetLexemeId("-"))
             {
-                node.AddChild(new SyntaxTreeNode("+"));
-                TransitToNextToken();
-            }
-            else if (GetTokenCode() == TokenTable.GetLexemeId("-"))
-            {
-                node.AddChild(new SyntaxTreeNode("-"));
+                node.AddLast(new SyntaxTreeNode(TokenCode));
                 TransitToNextToken();
             }
 
-            if (GetTokenCode() == TokenTable.GetLexemeId("("))
+            if (TokenCode == TokenTable.GetLexemeId("("))
             {
-                node.AddChild(new SyntaxTreeNode("("));
+                node.AddLast(new SyntaxTreeNode(TokenCode));
                 TransitToNextToken();
 
-                node.AddChild(Expression());
+                node.Last?.Value.AddChildren(Expression());
 
                 ExpectedToken(TokenTable.GetLexemeId(")"));
-                node.AddChild(new SyntaxTreeNode(")"));
+                node.AddLast(new SyntaxTreeNode(TokenCode));
             }
-            else if (GetTokenCode() >= 1 && GetTokenCode() <= 3)
+            else if (TokenCode >= 1 && TokenCode <= 3)
             {
-                var name = TokenTable.GetLexemeName(GetTokenCode());
-                node.AddChild(new SyntaxTreeNode(name, tokenListNode.Value.ForeignId));
+                node.AddLast(new SyntaxTreeNode(tokenListNode.Value));
 
                 TransitToNextToken();
             }
@@ -44,43 +39,36 @@ namespace RecursiveDescentParser
                 throw new Exception($"Unexpected token {TokenTable.GetLexemeName(token.Code)} in line {token.Line}.");
             }
 
-            while (GetTokenCode() >= 15 && GetTokenCode() <= 26)
+            while (TokenCode >= 15 && TokenCode <= 26)
             {
-                node.AddChild(new SyntaxTreeNode(TokenTable.GetLexemeName(GetTokenCode())));
+                node.AddLast(new SyntaxTreeNode(TokenCode));
                 TransitToNextToken();
 
-                if (GetTokenCode() == TokenTable.GetLexemeId("+"))
+                if (TokenCode == TokenTable.GetLexemeId("+") || TokenCode == TokenTable.GetLexemeId("-"))
                 {
-                    node.AddChild(new SyntaxTreeNode("+"));
-                    TransitToNextToken();
-                }
-                else if (GetTokenCode() == TokenTable.GetLexemeId("-"))
-                {
-                    node.AddChild(new SyntaxTreeNode("-"));
+                    node.AddLast(new SyntaxTreeNode(TokenCode));
                     TransitToNextToken();
                 }
 
-                if (GetTokenCode() == TokenTable.GetLexemeId("("))
+                if (TokenCode == TokenTable.GetLexemeId("("))
                 {
-                    node.AddChild(new SyntaxTreeNode("("));
+                    node.AddLast(new SyntaxTreeNode(TokenCode));
                     TransitToNextToken();
 
-                    node.AddChild(Expression());
+                    node.Last?.Value.AddChildren(Expression());
 
                     ExpectedToken(TokenTable.GetLexemeId(")"));
-                    node.AddChild(new SyntaxTreeNode(")"));
+                    node.AddLast(new SyntaxTreeNode(TokenCode));
                 }
-                else if (GetTokenCode() >= 1 && GetTokenCode() <= 3) // identifier && int/float literals
+                else if (TokenCode >= 1 && TokenCode <= 3) // identifier && int/float literals
                 {
-                    var name = TokenTable.GetLexemeName(GetTokenCode());
-                    node.AddChild(new SyntaxTreeNode(name, tokenListNode.Value.ForeignId));
+                    node.AddLast(new SyntaxTreeNode(tokenListNode.Value));
 
                     TransitToNextToken();
                 }
                 else
                 {
-                    var token = tokenListNode.Value;
-                    throw new Exception($"Unexpected token {TokenTable.GetLexemeName(token.Code)} in line {token.Line}.");
+                    throw new Exception($"Unexpected token {TokenTable.GetLexemeName(TokenCode)} in line {tokenListNode.Value.Line}.");
                 }
             }
 
@@ -90,14 +78,13 @@ namespace RecursiveDescentParser
         // AssignmentExpression = Identifier '=' Expression.
         private SyntaxTreeNode AssignmentExpression()
         {
-            SyntaxTreeNode node = new SyntaxTreeNode("assignment");
+            SyntaxTreeNode node = new SyntaxTreeNode(tokenListNode.Value);
 
-            var token = ExpectedToken(TokenTable.GetLexemeId("identifier"));
-            node.AddChild(new SyntaxTreeNode("identifier", token.ForeignId));
-
+            ExpectedToken(TokenTable.GetLexemeId("identifier"));
+            
+            node.AddChild(new SyntaxTreeNode(TokenCode));
             ExpectedToken(TokenTable.GetLexemeId("="));
-
-            node.AddChild(Expression());
+            node.Children[^1].AddChildren(Expression());
 
             return node;
         }

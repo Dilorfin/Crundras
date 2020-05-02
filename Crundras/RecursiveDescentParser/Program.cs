@@ -38,13 +38,18 @@ namespace RecursiveDescentParser
 
         private static void PrintSyntaxTree(TokenTable tokensTable, SyntaxTreeNode node, int level = 0)
         {
+            if (node == null)
+            {
+                return;
+            }
+
             Console.Write($"{new string('-', level)} {node.Name} ");
-            if (node.Id != 0)
+            if (node.Id.HasValue)
             {
                 Console.Write(node.Name == "identifier"
-                    ? $"\"{tokensTable.IdentifiersTable[node.Id]}\""
-                    : $"\"{tokensTable.LiteralsTable[node.Id]}\"");
-                Console.Write($" ({node.Id})");
+                    ? $"\"{tokensTable.IdentifiersTable[node.Id.Value]}\""
+                    : $"\"{tokensTable.LiteralsTable[node.Id.Value]}\"");
+                Console.Write($" ({node.Id.Value})");
             }
             Console.WriteLine();
 

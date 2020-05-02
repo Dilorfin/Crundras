@@ -15,8 +15,8 @@
         /// </summary>
         public uint Code;
         /// <summary>
-        /// id of lexeme in otherwise table
+        /// id of lexeme in otherwise table (or null)
         /// </summary>
-        public uint ForeignId;
+        public uint? ForeignId;
     }
 }

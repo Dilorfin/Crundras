@@ -2,6 +2,14 @@
 
 namespace Crundras.Common
 {
+    public sealed class SyntaxTreeRootNode : SyntaxTreeNode
+    {
+        public override string Name => "root";
+
+        public SyntaxTreeRootNode() : base(uint.MaxValue)
+        { }
+    }
+
     public class SyntaxTreeNode
     {
         /// <summary>
@@ -15,19 +23,30 @@ namespace Crundras.Common
         public List<SyntaxTreeNode> Children { get; private set; }
 
         /// <summary>
-        /// node name
+        /// lexeme name
         /// </summary>
-        public string Name { get; }
+        public virtual string Name => TokenTable.GetLexemeName(LexemeCode);
+
+        /// <summary>
+        /// lexeme code
+        /// </summary>
+        public uint LexemeCode { get; }
 
         /// <summary>
         /// id of identifier or literal
         /// </summary>
-        public uint Id { get; }
+        public uint? Id { get; }
 
-        public SyntaxTreeNode(string name, uint id = 0)
+        public SyntaxTreeNode(uint lexemeCode, uint? id = null)
         {
-            Name = name;
+            LexemeCode = lexemeCode;
             Id = id;
+        }
+
+        public SyntaxTreeNode(Token token)
+        {
+            LexemeCode = token.Code;
+            Id = token.ForeignId;
         }
 
         public void AddChild(SyntaxTreeNode node)
@@ -36,6 +55,14 @@ namespace Crundras.Common
 
             node.SetParent(this);
             Children.Add(node);
+        }
+
+        public void AddChildren(IEnumerable<SyntaxTreeNode> nodes)
+        {
+            foreach (var node in nodes)
+            {
+                AddChild(node);
+            }
         }
 
         private void SetParent(SyntaxTreeNode parent)

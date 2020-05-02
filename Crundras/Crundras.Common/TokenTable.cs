@@ -50,7 +50,7 @@ namespace Crundras.Common
                 return;
             }
 
-            var token = new Token { Line = line, Lexeme = lexeme, ForeignId = 0 };
+            var token = new Token { Line = line, Lexeme = lexeme, ForeignId = null };
 
             // checking if lexeme is language specific
             if (CodesTable.ContainsValue(lexeme))
