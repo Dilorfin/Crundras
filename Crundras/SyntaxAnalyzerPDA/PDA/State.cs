@@ -76,9 +76,19 @@ namespace SyntaxAnalyzerPDA.PDA
             }
 
             var transitionUnit = transitions[tokenType];
+            if (transitionUnit.Pop.HasValue)
+            {
+                if (tokenType != transitionUnit.Pop.Value)
+                {
+                    return otherwise.StateId;
+                }
+                stack.Pop();
+            }
 
-            stack.PopValue(transitionUnit.Pop);
-            stack.PushValue(transitionUnit.Push);
+            if (transitionUnit.Push.HasValue)
+            {
+                stack.Push(transitionUnit.Push.Value);
+            }
 
             return transitionUnit.StateId;
         }
