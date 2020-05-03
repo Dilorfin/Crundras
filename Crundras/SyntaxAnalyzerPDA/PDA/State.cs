@@ -78,7 +78,7 @@ namespace SyntaxAnalyzerPDA.PDA
             var transitionUnit = transitions[tokenType];
             if (transitionUnit.Pop.HasValue)
             {
-                if (tokenType != transitionUnit.Pop.Value)
+                if (stack.Peek() != transitionUnit.Pop.Value)
                 {
                     return otherwise.StateId;
                 }
