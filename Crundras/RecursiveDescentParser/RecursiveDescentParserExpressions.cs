@@ -27,7 +27,7 @@ namespace RecursiveDescentParser
                 ExpectedToken(TokenTable.GetLexemeId(")"));
                 node.AddLast(new SyntaxTreeNode(TokenCode));
             }
-            else if (TokenCode >= 1 && TokenCode <= 3)
+            else if (Token.IsIdentifierOrLiteral(TokenCode))
             {
                 node.AddLast(new SyntaxTreeNode(tokenListNode.Value));
 
@@ -60,7 +60,7 @@ namespace RecursiveDescentParser
                     ExpectedToken(TokenTable.GetLexemeId(")"));
                     node.AddLast(new SyntaxTreeNode(TokenCode));
                 }
-                else if (TokenCode >= 1 && TokenCode <= 3) // identifier && int/float literals
+                else if (Token.IsIdentifierOrLiteral(TokenCode))
                 {
                     node.AddLast(new SyntaxTreeNode(tokenListNode.Value));
 

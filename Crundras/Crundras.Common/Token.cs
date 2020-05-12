@@ -14,5 +14,18 @@
         /// id of lexeme in otherwise table (or null)
         /// </summary>
         public uint? ForeignId;
+
+        public static bool IsIdentifier(uint code)
+        {
+            return code == 1;
+        }
+        public static bool IsLiteral(uint code)
+        {
+            return code == 2 || code == 3;
+        }
+        public static bool IsIdentifierOrLiteral(uint code)
+        {
+            return IsLiteral(code) || IsIdentifier(code);
+        }
     }
 }

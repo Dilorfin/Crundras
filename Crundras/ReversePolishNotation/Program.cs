@@ -1,4 +1,5 @@
-﻿using Crundras.LexicalAnalyzer;
+﻿using Crundras.Common;
+using Crundras.LexicalAnalyzer;
 using SyntaxAnalyzerPDA;
 using System;
 using System.IO;
@@ -28,7 +29,14 @@ namespace ReversePolishNotation
                 var syntaxTree = SyntaxAnalyzer.Analyze(tokensTable);
                 foreach (var rpnToken in RPNTranslator.Analyze(syntaxTree))
                 {
-                    Console.WriteLine(rpnToken.Name);
+                    if (rpnToken.Id.HasValue)
+                    {
+                        Console.Write(Token.IsIdentifier(rpnToken.LexemeCode)
+                            ? tokensTable.IdentifiersTable[rpnToken.Id.Value]
+                            : tokensTable.LiteralsTable[rpnToken.Id.Value]);
+                    }
+                    else Console.Write(rpnToken.Name);
+                    Console.Write(" ");
                 }
             }
             catch (Exception e)

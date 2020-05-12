@@ -1,5 +1,6 @@
 ﻿using Crundras.Common;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ReversePolishNotation
 {
@@ -37,62 +38,56 @@ namespace ReversePolishNotation
         private readonly Dictionary<string, int> priorityTable = new Dictionary<string, int>
         {
             { "(", 0 },
-            { ")", 1 },
-            { "<", 2 },
-            { "<=", 2 },
-            { ">", 2 },
-            { ">=", 2 },
-            { "==", 2 },
-            { "!=", 2 },
-            { "+", 3 },
-            { "-", 3 },
-            { "*", 4 },
-            { "/", 4 },
-            { "NEG", 4 },
-            { "**", 5 }
+            { ")", 0 },
+            { "<", 1 },
+            { "<=", 1 },
+            { ">", 1 },
+            { ">=", 1 },
+            { "==", 1 },
+            { "!=", 1 },
+            { "+", 2 },
+            { "-", 2 },
+            { "*", 3 },
+            { "/", 3 },
+            { "NEG", 5 },
+            { "**", 4 }
         };
 
-        // stack should be local for arithmetic expression
+        // may be stack should be local for arithmetic expression
         private readonly Stack<RPNToken> stack = new Stack<RPNToken>();
         private readonly LinkedList<RPNToken> result = new LinkedList<RPNToken>();
 
-        private void RPNArithmeticExpression(List<SyntaxTreeNode> nodes)
+        private void ArithmeticExpression(List<SyntaxTreeNode> nodes)
         {
-            if(nodes.Count == 0) return;
+            if (nodes.Count == 0) return;
 
-            if (nodes[0].LexemeCode >= 1 && nodes[0].LexemeCode <= 3)
+            for (int i = 0; i < nodes.Count; i++)
             {
-                result.AddLast(new RPNToken(nodes[0]));
-            }
-            else if(nodes[0].LexemeCode != TokenTable.GetLexemeId("+"))
-            {
-                var token = new RPNToken(nodes[0]);
-                if (nodes[0].LexemeCode == TokenTable.GetLexemeId("-"))
-                {
-                    token.Name = "NEG";
-                }
-
-                while ((stack.Count > 0) && priorityTable[token.Name] <= priorityTable[stack.Peek().Name])
-                {
-                    result.AddLast(stack.Pop());
-                }
-                stack.Push(token);
-            }
-
-            for (int i = 1; i < nodes.Count; i++)
-            {
-                if (nodes[i].LexemeCode >= 1 && nodes[i].LexemeCode <= 3)
+                if (Token.IsIdentifierOrLiteral(nodes[i].LexemeCode))
                 {
                     result.AddLast(new RPNToken(nodes[i]));
+                    continue;
+                }
+
+                if (nodes[i].LexemeCode == TokenTable.GetLexemeId("("))
+                {
+                    stack.Push(new RPNToken(nodes[i]));
+                }
+                else if (nodes[i].LexemeCode == TokenTable.GetLexemeId(")"))
+                {
+                    var token = stack.Pop();
+                    while (token.Name != "(")
+                    {
+                        result.AddLast(token);
+                        token = stack.Pop();
+                    }
                 }
                 else
                 {
-                    // CHECK: if Token class should contain "IsIdentifier" & "IsLiteral" functions
                     var token = new RPNToken(nodes[i]);
-                    if (nodes[i-1].LexemeCode != TokenTable.GetLexemeId(")")
-                        && nodes[i-1].LexemeCode != TokenTable.GetLexemeId("identifier")
-                        && nodes[i-1].LexemeCode != TokenTable.GetLexemeId("int_literal")
-                        && nodes[i-1].LexemeCode != TokenTable.GetLexemeId("float_literal"))
+
+                    if ((i == 0) || (nodes[i - 1].LexemeCode != TokenTable.GetLexemeId(")")
+                                     && !Token.IsIdentifierOrLiteral(nodes[i - 1].LexemeCode)))
                     {
                         if (nodes[i].LexemeCode == TokenTable.GetLexemeId("-"))
                         {
@@ -103,11 +98,11 @@ namespace ReversePolishNotation
                             continue;
                         }
                     }
-                    
                     while ((stack.Count > 0) && priorityTable[token.Name] <= priorityTable[stack.Peek().Name])
                     {
                         result.AddLast(stack.Pop());
                     }
+
                     stack.Push(token);
                 }
             }
@@ -118,10 +113,15 @@ namespace ReversePolishNotation
             }
         }
 
+        private void Root(SyntaxTreeNode root)
+        {
+
+        }
+
         public static LinkedList<RPNToken> Analyze(SyntaxTreeNode root)
         {
             var syntaxAnalyzerRpn = new RPNTranslator();
-            syntaxAnalyzerRpn.RPNArithmeticExpression(root.Children[0].Children);
+            syntaxAnalyzerRpn.ArithmeticExpression(root.Children[0].Children);
             return syntaxAnalyzerRpn.result;
         }
     }
