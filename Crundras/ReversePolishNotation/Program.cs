@@ -2,6 +2,7 @@
 using Crundras.LexicalAnalyzer;
 using SyntaxAnalyzerPDA;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace ReversePolishNotation
@@ -27,17 +28,9 @@ namespace ReversePolishNotation
                 var tokensTable = LexicalAnalyzer.AnalyzeFile(args[0]);
 
                 var syntaxTree = SyntaxAnalyzer.Analyze(tokensTable);
-                foreach (var rpnToken in RPNTranslator.Analyze(syntaxTree))
-                {
-                    if (rpnToken.Id.HasValue)
-                    {
-                        Console.Write(Token.IsIdentifier(rpnToken.LexemeCode)
-                            ? tokensTable.IdentifiersTable[rpnToken.Id.Value]
-                            : tokensTable.LiteralsTable[rpnToken.Id.Value]);
-                    }
-                    else Console.Write(rpnToken.Name);
-                    Console.Write(" ");
-                }
+                var rpnTokens = RPNTranslator.Analyze(syntaxTree);
+                new RPNArithmeticInterpreter().Interpret(tokensTable, rpnTokens);
+
             }
             catch (Exception e)
             {
@@ -45,6 +38,21 @@ namespace ReversePolishNotation
             }
 
             Console.ReadKey();
+        }
+
+        private static void DisplayRpnTokens(TokenTable tokensTable, LinkedList<RPNToken> rpnTokens)
+        {
+            foreach (var rpnToken in rpnTokens)
+            {
+                if (rpnToken.Id.HasValue)
+                {
+                    Console.Write(Token.IsIdentifier(rpnToken.LexemeCode)
+                        ? tokensTable.IdentifiersTable[rpnToken.Id.Value]
+                        : tokensTable.LiteralsTable[rpnToken.Id.Value]);
+                }
+                else Console.Write(rpnToken.Name);
+                Console.Write(" ");
+            }
         }
     }
 }
