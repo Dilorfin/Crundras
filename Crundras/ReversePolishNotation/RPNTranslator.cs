@@ -1,47 +1,32 @@
 ﻿using Crundras.Common;
+using Crundras.Common.Tables;
+using System;
 using System.Collections.Generic;
 
 namespace ReversePolishNotation
 {
-    public class RPNToken
+    public class LabelsTable : Dictionary<uint, uint>
     {
-        public string Name { get; set; }
-
-        public uint LexemeCode { get; set; }
-
-        public uint? Id { get; set;  }
-
-        public RPNToken(uint lexemeCode, string name, uint? id = null)
-        {
-            Name = name;
-            LexemeCode = lexemeCode;
-            Id = id;
-        }
-
-        public RPNToken(uint lexemeCode, uint? id = null)
-        {
-            Name = TokenTable.GetLexemeName(lexemeCode);
-            LexemeCode = lexemeCode;
-            Id = id;
-        }
-        public RPNToken(SyntaxTreeNode treeNode)
-        {
-            Name = TokenTable.GetLexemeName(treeNode.LexemeCode);
-            LexemeCode = treeNode.LexemeCode;
-            Id = treeNode.Id;
-        }
     }
 
     public class RPNTranslator
     {
         private readonly Stack<RPNToken> stack = new Stack<RPNToken>();
         private readonly LinkedList<RPNToken> result = new LinkedList<RPNToken>();
+        private readonly TablesCollection tables;
+        private readonly LabelsTable labelsTable;
+
+        private RPNTranslator(TablesCollection tables)
+        {
+            this.tables = tables;
+            this.labelsTable = new LabelsTable();
+        }
 
         private void ArithmeticExpression(List<SyntaxTreeNode> nodes)
         {
             if (nodes.Count == 0) return;
 
-            Dictionary<string, int> priorityTable = new Dictionary<string, int>
+            var priorityTable = new Dictionary<string, int>
             {
                 { "(", 0 },
                 { ")", 0 },
@@ -68,11 +53,11 @@ namespace ReversePolishNotation
                     continue;
                 }
 
-                if (nodes[i].LexemeCode == TokenTable.GetLexemeId("("))
+                if (nodes[i].LexemeCode == LexemesTable.GetLexemeId("("))
                 {
                     stack.Push(new RPNToken(nodes[i]));
                 }
-                else if (nodes[i].LexemeCode == TokenTable.GetLexemeId(")"))
+                else if (nodes[i].LexemeCode == LexemesTable.GetLexemeId(")"))
                 {
                     var token = stack.Pop();
                     while (token.Name != "(")
@@ -85,14 +70,14 @@ namespace ReversePolishNotation
                 {
                     var token = new RPNToken(nodes[i]);
 
-                    if ((i == 0) || (nodes[i - 1].LexemeCode != TokenTable.GetLexemeId(")")
+                    if ((i == 0) || (nodes[i - 1].LexemeCode != LexemesTable.GetLexemeId(")")
                                      && !Token.IsIdentifierOrLiteral(nodes[i - 1].LexemeCode)))
                     {
-                        if (nodes[i].LexemeCode == TokenTable.GetLexemeId("-"))
+                        if (nodes[i].LexemeCode == LexemesTable.GetLexemeId("-"))
                         {
                             token.Name = "NEG";
                         }
-                        else if (nodes[i].LexemeCode == TokenTable.GetLexemeId("+"))
+                        else if (nodes[i].LexemeCode == LexemesTable.GetLexemeId("+"))
                         {
                             continue;
                         }
@@ -112,46 +97,124 @@ namespace ReversePolishNotation
             }
         }
 
-        private void Root(SyntaxTreeNode root)
+        private void SetIdentifierType(SyntaxTreeNode identifierNode, uint type)
         {
-            foreach (var rootChild in root.Children)
+            if (!identifierNode.Id.HasValue)
             {
-                switch (rootChild.LexemeCode)
-                {
-                    // 'identifier'
-                    case 1:
-                        break;
-                    // '$'
-                    case 12:
-                        break;
-                    // '@'
-                    case 13:
-                        ArithmeticExpression(rootChild.Children);
-                        result.AddLast(new RPNToken(TokenTable.GetLexemeId("@")));
-                        break;
-                    // '{'
-                    case 29:
-                        break;
-                    // 'if'
-                    case 6:
-                        break;
-                    // 'for'
-                    case 7:
-                        break;
-                    // 'int'
-                    case 4:
-                        break;
-                    // 'float'
-                    case 5:
-                        break;
-                }
+                throw new Exception("Expected identifier.");
+            }
+
+            var identifier = tables.IdentifiersTable[identifierNode.Id.Value];
+            identifier.Type = type;
+        }
+
+        private void IfStatement(SyntaxTreeNode node)
+        {
+            var labelId = (uint)(labelsTable.Count + 1);
+            result.AddLast(new RPNToken(0, $"LB{labelId}", labelId));
+            ArithmeticExpression(node.Children[0].Children);
+            result.AddLast(new RPNToken(LexemesTable.GetLexemeId("if")));
+            Statement(node.Children[1]);
+            labelsTable[labelId] = (uint)result.Count;
+            result.AddLast(new RPNToken(0, $"LB{labelId}", labelId));
+        }
+
+        private void ForStatement(SyntaxTreeNode node)
+        {
+            // stm 1
+            ArithmeticExpression(node.Children[1].Children);
+            result.AddLast(new RPNToken(node.Children[0]));
+            result.AddLast(new RPNToken(LexemesTable.GetLexemeId("=")));
+
+            var startLabelId = (uint)(labelsTable.Count + 1);
+            labelsTable[startLabelId] = (uint)result.Count;
+            result.AddLast(new RPNToken(0, $"LB{startLabelId}", startLabelId));
+
+            var endLabelId = (uint)(labelsTable.Count + 1);
+            // stm 4
+            result.AddLast(new RPNToken(0, $"LB{endLabelId}", endLabelId));
+            ArithmeticExpression(node.Children[5].Children);
+            result.AddLast(new RPNToken(LexemesTable.GetLexemeId("if")));
+
+            // stm 2
+            result.AddLast(new RPNToken(0, $"LB{endLabelId}", endLabelId));
+            ArithmeticExpression(node.Children[2].Children);
+            result.AddLast(new RPNToken(node.Children[0]));
+            result.AddLast(new RPNToken(LexemesTable.GetLexemeId("==")));
+            result.AddLast(new RPNToken(LexemesTable.GetLexemeId("if")));
+
+            Statement(node.Children[6]);
+
+            // stm 3
+            ArithmeticExpression(node.Children[3].Children);
+            result.AddLast(new RPNToken(node.Children[0]));
+            result.AddLast(new RPNToken(LexemesTable.GetLexemeId("+")));
+            result.AddLast(new RPNToken(node.Children[0]));
+            result.AddLast(new RPNToken(LexemesTable.GetLexemeId("=")));
+
+            // goto start
+            result.AddLast(new RPNToken(0, $"LB{startLabelId}", startLabelId));
+            result.AddLast(new RPNToken(LexemesTable.GetLexemeId("goto")));
+            // end
+            result.AddLast(new RPNToken(0, $"LB{endLabelId}", endLabelId));
+        }
+
+        private void Statement(SyntaxTreeNode node)
+        {
+            switch (node.LexemeCode)
+            {
+                // 'identifier'
+                case 1:
+                    ArithmeticExpression(node.Children[0].Children);
+                    result.AddLast(new RPNToken(node));
+                    result.AddLast(new RPNToken(LexemesTable.GetLexemeId("=")));
+                    break;
+                // '$'
+                case 12:
+                    result.AddLast(new RPNToken(node.Children[0]));
+                    result.AddLast(new RPNToken(LexemesTable.GetLexemeId("$")));
+                    break;
+                // '@'
+                case 13:
+                    ArithmeticExpression(node.Children);
+                    result.AddLast(new RPNToken(LexemesTable.GetLexemeId("@")));
+                    break;
+                // '{'
+                case 29:
+                    Statements(node);
+                    break;
+                // 'if'
+                case 6:
+                    IfStatement(node);
+                    break;
+                // 'for'
+                case 7:
+                    ForStatement(node);
+                    break;
+                // 'int'
+                case 4:
+                    SetIdentifierType(node.Children[0], 2);
+                    break;
+                // 'float'
+                case 5:
+                    SetIdentifierType(node.Children[0], 3);
+                    break;
             }
         }
 
-        public static LinkedList<RPNToken> Analyze(SyntaxTreeNode root)
+        private void Statements(SyntaxTreeNode node)
         {
-            var syntaxAnalyzerRpn = new RPNTranslator();
-            syntaxAnalyzerRpn.Root(root);
+            foreach (var child in node.Children)
+            {
+                Statement(child);
+                stack.Clear();
+            }
+        }
+
+        public static LinkedList<RPNToken> Analyze(TablesCollection tables, SyntaxTreeNode root)
+        {
+            var syntaxAnalyzerRpn = new RPNTranslator(tables);
+            syntaxAnalyzerRpn.Statements(root);
             return syntaxAnalyzerRpn.result;
         }
     }
