@@ -1,4 +1,5 @@
 ﻿using Crundras.Common;
+using Crundras.Common.Tables;
 using SyntaxAnalyzerPDA.PDA;
 using System;
 using System.Collections.Generic;
@@ -24,7 +25,7 @@ namespace SyntaxAnalyzerPDA
         {
             var analyzer = new SyntaxAnalyzer();
 
-            LinkedListNode<Token> tokenListNode = tokenTable.TokensList.First;
+            LinkedListNode<Token> tokenListNode = tokenTable.First;
             while (tokenListNode != null)
             {
                 analyzer.Analyze(tokenListNode.Value);

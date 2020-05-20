@@ -1,4 +1,5 @@
 ﻿using Crundras.Common;
+using Crundras.Common.Tables;
 using System;
 using System.Collections.Generic;
 
@@ -11,20 +12,20 @@ namespace RecursiveDescentParser
         {
             LinkedList<SyntaxTreeNode> node = new LinkedList<SyntaxTreeNode>();
 
-            if (TokenCode == TokenTable.GetLexemeId("+") || TokenCode == TokenTable.GetLexemeId("-"))
+            if (TokenCode == LexemesTable.GetLexemeId("+") || TokenCode == LexemesTable.GetLexemeId("-"))
             {
                 node.AddLast(new SyntaxTreeNode(TokenCode));
                 TransitToNextToken();
             }
 
-            if (TokenCode == TokenTable.GetLexemeId("("))
+            if (TokenCode == LexemesTable.GetLexemeId("("))
             {
                 node.AddLast(new SyntaxTreeNode(TokenCode));
                 TransitToNextToken();
 
                 node.Last?.Value.AddChildren(Expression());
 
-                ExpectedToken(TokenTable.GetLexemeId(")"));
+                ExpectedToken(LexemesTable.GetLexemeId(")"));
                 node.AddLast(new SyntaxTreeNode(TokenCode));
             }
             else if (Token.IsIdentifierOrLiteral(TokenCode))
@@ -36,7 +37,7 @@ namespace RecursiveDescentParser
             else
             {
                 var token = tokenListNode.Value;
-                throw new Exception($"Unexpected token {TokenTable.GetLexemeName(token.Code)} in line {token.Line}.");
+                throw new Exception($"Unexpected token {LexemesTable.GetLexemeName(token.Code)} in line {token.Line}.");
             }
 
             while (TokenCode >= 15 && TokenCode <= 26)
@@ -44,20 +45,20 @@ namespace RecursiveDescentParser
                 node.AddLast(new SyntaxTreeNode(TokenCode));
                 TransitToNextToken();
 
-                if (TokenCode == TokenTable.GetLexemeId("+") || TokenCode == TokenTable.GetLexemeId("-"))
+                if (TokenCode == LexemesTable.GetLexemeId("+") || TokenCode == LexemesTable.GetLexemeId("-"))
                 {
                     node.AddLast(new SyntaxTreeNode(TokenCode));
                     TransitToNextToken();
                 }
 
-                if (TokenCode == TokenTable.GetLexemeId("("))
+                if (TokenCode == LexemesTable.GetLexemeId("("))
                 {
                     node.AddLast(new SyntaxTreeNode(TokenCode));
                     TransitToNextToken();
 
                     node.Last?.Value.AddChildren(Expression());
 
-                    ExpectedToken(TokenTable.GetLexemeId(")"));
+                    ExpectedToken(LexemesTable.GetLexemeId(")"));
                     node.AddLast(new SyntaxTreeNode(TokenCode));
                 }
                 else if (Token.IsIdentifierOrLiteral(TokenCode))
@@ -68,7 +69,7 @@ namespace RecursiveDescentParser
                 }
                 else
                 {
-                    throw new Exception($"Unexpected token {TokenTable.GetLexemeName(TokenCode)} in line {tokenListNode.Value.Line}.");
+                    throw new Exception($"Unexpected token {LexemesTable.GetLexemeName(TokenCode)} in line {tokenListNode.Value.Line}.");
                 }
             }
 
@@ -80,10 +81,10 @@ namespace RecursiveDescentParser
         {
             SyntaxTreeNode node = new SyntaxTreeNode(tokenListNode.Value);
 
-            ExpectedToken(TokenTable.GetLexemeId("identifier"));
-            
+            ExpectedToken(LexemesTable.GetLexemeId("identifier"));
+
             node.AddChild(new SyntaxTreeNode(TokenCode));
-            ExpectedToken(TokenTable.GetLexemeId("="));
+            ExpectedToken(LexemesTable.GetLexemeId("="));
             node.Children[^1].AddChildren(Expression());
 
             return node;

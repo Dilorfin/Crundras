@@ -25,7 +25,7 @@ namespace Crundras.LexicalAnalyzer.FSM
 
             return this;
         }
-        
+
         public State ConfigureOtherwiseTransition(int nextStateId)
         {
             otherwiseId = nextStateId;

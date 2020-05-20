@@ -1,4 +1,5 @@
 ﻿using Crundras.Common;
+using Crundras.Common.Tables;
 
 namespace RecursiveDescentParser
 {
@@ -36,7 +37,7 @@ namespace RecursiveDescentParser
         /*private SyntaxTreeNode ExpressionStatement()
         {
             SyntaxTreeNode node = Expression();
-            ExpectedToken(TokenTable.GetLexemeId(";"));
+            ExpectedToken(LexemesTable.GetLexemeId(";"));
             return node;
         }*/
 
@@ -44,11 +45,11 @@ namespace RecursiveDescentParser
         private SyntaxTreeNode SelectionStatement()
         {
             SyntaxTreeNode node = new SyntaxTreeNode(TokenCode);
-            ExpectedToken(TokenTable.GetLexemeId("if"));
+            ExpectedToken(LexemesTable.GetLexemeId("if"));
 
-            ExpectedToken(TokenTable.GetLexemeId("("));
+            ExpectedToken(LexemesTable.GetLexemeId("("));
             node.AddChildren(Expression());
-            ExpectedToken(TokenTable.GetLexemeId(")"));
+            ExpectedToken(LexemesTable.GetLexemeId(")"));
 
             node.AddChild(Statement());
 
@@ -59,29 +60,29 @@ namespace RecursiveDescentParser
         private SyntaxTreeNode IterationStatement()
         {
             SyntaxTreeNode node = new SyntaxTreeNode(TokenCode);
-            ExpectedToken(TokenTable.GetLexemeId("for"));
-            
+            ExpectedToken(LexemesTable.GetLexemeId("for"));
+
             node.AddChild(AssignmentExpression());
-            
+
             node.AddChild(new SyntaxTreeNode(TokenCode));
-            ExpectedToken(TokenTable.GetLexemeId("to"));
-            node.Children[^1].AddChildren(Expression());
-            
-            node.AddChild(new SyntaxTreeNode(TokenCode));
-            ExpectedToken(TokenTable.GetLexemeId("by"));
+            ExpectedToken(LexemesTable.GetLexemeId("to"));
             node.Children[^1].AddChildren(Expression());
 
             node.AddChild(new SyntaxTreeNode(TokenCode));
-            ExpectedToken(TokenTable.GetLexemeId("while"));
-
-            ExpectedToken(TokenTable.GetLexemeId("("));
+            ExpectedToken(LexemesTable.GetLexemeId("by"));
             node.Children[^1].AddChildren(Expression());
-            ExpectedToken(TokenTable.GetLexemeId(")"));
+
+            node.AddChild(new SyntaxTreeNode(TokenCode));
+            ExpectedToken(LexemesTable.GetLexemeId("while"));
+
+            ExpectedToken(LexemesTable.GetLexemeId("("));
+            node.Children[^1].AddChildren(Expression());
+            ExpectedToken(LexemesTable.GetLexemeId(")"));
 
             node.AddChild(Statement());
 
-            ExpectedToken(TokenTable.GetLexemeId("rof"));
-            ExpectedToken(TokenTable.GetLexemeId(";"));
+            ExpectedToken(LexemesTable.GetLexemeId("rof"));
+            ExpectedToken(LexemesTable.GetLexemeId(";"));
 
             return node;
         }
@@ -90,12 +91,12 @@ namespace RecursiveDescentParser
         private SyntaxTreeNode CompoundStatement()
         {
             SyntaxTreeNode node = new SyntaxTreeNode(TokenCode);
-            ExpectedToken(TokenTable.GetLexemeId("{"));
-            while (TokenCode != TokenTable.GetLexemeId("}"))
+            ExpectedToken(LexemesTable.GetLexemeId("{"));
+            while (TokenCode != LexemesTable.GetLexemeId("}"))
             {
                 node.AddChild(Statement());
             }
-            ExpectedToken(TokenTable.GetLexemeId("}"));
+            ExpectedToken(LexemesTable.GetLexemeId("}"));
             return node;
         }
 
@@ -103,15 +104,15 @@ namespace RecursiveDescentParser
         private SyntaxTreeNode DeclarationStatement()
         {
             SyntaxTreeNode node = new SyntaxTreeNode(TokenCode);
-            
+
             //"int" | "float"
-            ExpectedOneOfTokens("TypeSpecifier", TokenTable.GetLexemeId("int"), TokenTable.GetLexemeId("float"));
-            
+            ExpectedOneOfTokens("TypeSpecifier", LexemesTable.GetLexemeId("int"), LexemesTable.GetLexemeId("float"));
+
             // identifier
-            var token = ExpectedToken(TokenTable.GetLexemeId("identifier"));
+            var token = ExpectedToken(LexemesTable.GetLexemeId("identifier"));
             node.AddChild(new SyntaxTreeNode(token));
 
-            ExpectedToken(TokenTable.GetLexemeId(";"));
+            ExpectedToken(LexemesTable.GetLexemeId(";"));
 
             return node;
         }
@@ -120,11 +121,11 @@ namespace RecursiveDescentParser
         private SyntaxTreeNode InputStatement()
         {
             SyntaxTreeNode node = new SyntaxTreeNode(TokenCode);
-            
-            ExpectedToken(TokenTable.GetLexemeId("$"));
-            var token = ExpectedToken(TokenTable.GetLexemeId("identifier"));
+
+            ExpectedToken(LexemesTable.GetLexemeId("$"));
+            var token = ExpectedToken(LexemesTable.GetLexemeId("identifier"));
             node.AddChild(new SyntaxTreeNode(token));
-            ExpectedToken(TokenTable.GetLexemeId(";"));
+            ExpectedToken(LexemesTable.GetLexemeId(";"));
 
             return node;
         }
@@ -134,9 +135,9 @@ namespace RecursiveDescentParser
         {
             SyntaxTreeNode node = new SyntaxTreeNode(TokenCode);
 
-            ExpectedToken(TokenTable.GetLexemeId("@"));
+            ExpectedToken(LexemesTable.GetLexemeId("@"));
             node.AddChildren(Expression());
-            ExpectedToken(TokenTable.GetLexemeId(";"));
+            ExpectedToken(LexemesTable.GetLexemeId(";"));
 
             return node;
         }
@@ -145,7 +146,7 @@ namespace RecursiveDescentParser
         private SyntaxTreeNode AssignmentStatement()
         {
             SyntaxTreeNode node = AssignmentExpression();
-            ExpectedToken(TokenTable.GetLexemeId(";"));
+            ExpectedToken(LexemesTable.GetLexemeId(";"));
             return node;
         }
     }

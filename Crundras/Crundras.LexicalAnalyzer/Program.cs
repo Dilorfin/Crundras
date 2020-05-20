@@ -1,6 +1,7 @@
-﻿using System;
+﻿using Crundras.Common;
+using Crundras.Common.Tables;
+using System;
 using System.IO;
-using Crundras.Common;
 
 namespace Crundras.LexicalAnalyzer
 {
@@ -22,14 +23,26 @@ namespace Crundras.LexicalAnalyzer
 
             try
             {
-                var tokensTable = LexicalAnalyzer.AnalyzeFile(args[0]);
+                var tables = LexicalAnalyzer.AnalyzeFile(args[0]);
 
-                foreach (var token in tokensTable.TokensList)
+                foreach (var token in tables.TokenTable)
                 {
-                    Console.Write($"{token.Line,15} {TokenTable.GetLexemeName(token.Code),40} {token.Code,10}");
+                    Console.Write($"{token.Line,4} {LexemesTable.GetLexemeName(token.Code),20} {token.Code,10}");
                     if (token.ForeignId.HasValue)
                     {
-                        Console.Write($"{token.ForeignId.Value,3}");
+                        if (Token.IsIdentifier(token.Code))
+                        {
+                            Console.Write($"\"{tables.IdentifiersTable[token.ForeignId.Value].Name}\"");
+                        }
+                        else if (Token.IsIntLiteral(token.Code))
+                        {
+                            Console.Write($"\"{tables.IntLiteralsTable[token.ForeignId.Value]}\"");
+                        }
+                        else if (Token.IsFloatLiteral(token.Code))
+                        {
+                            Console.Write($"\"{tables.FloatLiteralsTable[token.ForeignId.Value]}\"");
+                        }
+                        Console.Write($"({token.ForeignId.Value})");
                     }
                     Console.WriteLine();
                 }

@@ -1,4 +1,5 @@
 ﻿using Crundras.Common;
+using Crundras.Common.Tables;
 using Crundras.LexicalAnalyzer.FSM;
 using System;
 using System.IO;
@@ -13,18 +14,19 @@ namespace Crundras.LexicalAnalyzer
         private readonly StateMachine stateMachine;
         private State CurrentState => stateMachine.CurrentState;
 
-        public TokenTable TokenTable { get; }
+        public TablesCollection Tables { get; }
 
         private uint line = 1;
-        
-        public LexicalAnalyzer()
+
+        private LexicalAnalyzer()
         {
-            this.TokenTable = new TokenTable();
+            this.Tables = new TablesCollection();
+
             this.stateMachine = new StateMachine();
             this.stringBuilder = new StringBuilder();
         }
 
-        public void NextChar(char nextChar)
+        private void NextChar(char nextChar)
         {
             do
             {
@@ -58,7 +60,7 @@ namespace Crundras.LexicalAnalyzer
                 if (CurrentState.IsFinal)
                 {
                     var lexeme = stringBuilder.ToString();
-                    TokenTable.AddToken(line, lexeme, CurrentState.Id);
+                    AddLexeme(lexeme, CurrentState.Id);
                     stringBuilder.Clear();
                 }
 
@@ -67,18 +69,18 @@ namespace Crundras.LexicalAnalyzer
                 {
                     stringBuilder.Clear();
                 }
-            } 
+            }
             while (!CurrentState.TakeCharacter);
         }
 
-        public static TokenTable AnalyzeFile(string fileName)
+        public static TablesCollection AnalyzeFile(string fileName)
         {
             using var file = new StreamReader(fileName, true);
             var analyzer = new LexicalAnalyzer();
-            
+
             while (!file.EndOfStream)
             {
-                analyzer.NextChar((char) file.Read());
+                analyzer.NextChar((char)file.Read());
             }
 
             // '\0' - last character
@@ -86,9 +88,49 @@ namespace Crundras.LexicalAnalyzer
 
             file.Close();
 
-            return analyzer.TokenTable;
+            return analyzer.Tables;
         }
-        
+
+        private void AddLexeme(string lexeme, int stateId)
+        {
+            // skip comments
+            if (stateId == 26 || stateId == 28)
+            {
+                return;
+            }
+
+            var token = new Token { Line = line, ForeignId = null };
+
+            // checking if lexeme is language specific
+            if (LexemesTable.IsKeyword(lexeme))
+            {
+                token.Code = LexemesTable.GetLexemeId(lexeme);
+            }
+            else
+            {
+                // identifiers
+                if (stateId == 3)
+                {
+                    token.Code = 1;
+                    token.ForeignId = Tables.IdentifiersTable.GetId(lexeme);
+                }
+                // int literal
+                else if (stateId == 7)
+                {
+                    token.Code = 2;
+                    token.ForeignId = Tables.IntLiteralsTable.GetId(lexeme);
+                }
+                // float literal
+                else
+                {
+                    token.Code = 3;
+                    token.ForeignId = Tables.FloatLiteralsTable.GetId(lexeme);
+                }
+            }
+
+            Tables.TokenTable.AddLast(token);
+        }
+
         private static int GetCharClass(char c)
         {
             int charClass = c;

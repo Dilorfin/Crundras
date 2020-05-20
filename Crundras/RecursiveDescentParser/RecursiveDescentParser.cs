@@ -1,4 +1,5 @@
 ﻿using Crundras.Common;
+using Crundras.Common.Tables;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace RecursiveDescentParser
 
         public RecursiveDescentParser(TokenTable tokenTable)
         {
-            tokenListNode = tokenTable.TokensList.First;
+            tokenListNode = tokenTable.First;
         }
 
         public SyntaxTreeNode Analyze()
@@ -54,7 +55,7 @@ namespace RecursiveDescentParser
 
             if (tokenCodes.All(tokenCode => TokenCode != tokenCode))
             {
-                throw new Exception($"Expected {expected} but found \"{TokenTable.GetLexemeName(TokenCode)}\" in line {tokenListNode.Value.Line}.");
+                throw new Exception($"Expected {expected} but found \"{LexemesTable.GetLexemeName(TokenCode)}\" in line {tokenListNode.Value.Line}.");
             }
 
             var token = tokenListNode.Value;
@@ -68,8 +69,8 @@ namespace RecursiveDescentParser
 
             if (TokenCode != tokenCode)
             {
-                throw new Exception($"Expected \"{TokenTable.GetLexemeName(tokenCode)}\" " +
-                                    $"but found \"{TokenTable.GetLexemeName(TokenCode)}\" " +
+                throw new Exception($"Expected \"{LexemesTable.GetLexemeName(tokenCode)}\" " +
+                                    $"but found \"{LexemesTable.GetLexemeName(TokenCode)}\" " +
                                     $"in line {tokenListNode.Value.Line}.");
             }
 

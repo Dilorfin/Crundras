@@ -1,4 +1,5 @@
 ﻿using Crundras.Common;
+using Crundras.Common.Tables;
 using Crundras.LexicalAnalyzer;
 using System;
 using System.IO;
@@ -23,10 +24,10 @@ namespace RecursiveDescentParser
 
             try
             {
-                var tokensTable = LexicalAnalyzer.AnalyzeFile(args[0]);
+                var tables = LexicalAnalyzer.AnalyzeFile(args[0]);
 
-                var syntaxTree = new RecursiveDescentParser(tokensTable).Analyze();
-                PrintSyntaxTree(tokensTable, syntaxTree);
+                var syntaxTree = new RecursiveDescentParser(tables.TokenTable).Analyze();
+                PrintSyntaxTree(tables, syntaxTree);
             }
             catch (Exception e)
             {
@@ -36,7 +37,7 @@ namespace RecursiveDescentParser
             Console.ReadKey();
         }
 
-        private static void PrintSyntaxTree(TokenTable tokensTable, SyntaxTreeNode node, int level = 0)
+        private static void PrintSyntaxTree(TablesCollection tables, SyntaxTreeNode node, int level = 0)
         {
             if (node == null)
             {
@@ -45,12 +46,21 @@ namespace RecursiveDescentParser
 
             if (node.LexemeCode != uint.MaxValue)
             {
-                Console.Write($"{new string('-', level)} {TokenTable.GetLexemeName(node.LexemeCode)} ");
+                Console.Write($"{new string('-', level)} {LexemesTable.GetLexemeName(node.LexemeCode)} ");
                 if (node.Id.HasValue)
                 {
-                    Console.Write(node.LexemeCode == TokenTable.GetLexemeId("identifier")
-                        ? $"\"{tokensTable.IdentifiersTable[node.Id.Value]}\""
-                        : $"\"{tokensTable.LiteralsTable[node.Id.Value]}\"");
+                    if (Token.IsIdentifier(node.LexemeCode))
+                    {
+                        Console.Write($"\"{tables.IdentifiersTable[node.Id.Value].Name}\"");
+                    }
+                    else if (Token.IsIntLiteral(node.LexemeCode))
+                    {
+                        Console.Write($"\"{tables.IntLiteralsTable[node.Id.Value]}\"");
+                    }
+                    else if (Token.IsFloatLiteral(node.LexemeCode))
+                    {
+                        Console.Write($"\"{tables.FloatLiteralsTable[node.Id.Value]}\"");
+                    }
                     Console.Write($" ({node.Id.Value})");
                 }
                 Console.WriteLine();
@@ -63,7 +73,7 @@ namespace RecursiveDescentParser
 
             foreach (var child in node.Children)
             {
-                PrintSyntaxTree(tokensTable, child, level + 1);
+                PrintSyntaxTree(tables, child, level + 1);
             }
         }
     }
