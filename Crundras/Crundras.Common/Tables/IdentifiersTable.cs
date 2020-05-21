@@ -11,20 +11,6 @@ namespace Crundras.Common.Tables
             public uint Type { get; set; }
             public string Name { get; set; }
             public string Value { get; set; }
-
-            public override bool Equals(object obj)
-            {
-                if (obj is null || !(obj is Identifier identifier)) 
-                    return false;
-
-                return identifier.Name == this.Name 
-                       && identifier.Type == this.Type;
-            }
-
-            public override int GetHashCode()
-            {
-                return HashCode.Combine(Type, Name);
-            }
         }
 
         private readonly Dictionary<uint, Identifier> identifiers = new Dictionary<uint, Identifier>();
@@ -33,15 +19,14 @@ namespace Crundras.Common.Tables
 
         public uint GetId(string name)
         {
-            var identifier = new Identifier { Name = name };
-
-            if (identifiers.ContainsValue(identifier))
+            var (key, value) = identifiers.FirstOrDefault(p => p.Value.Name == name);
+            if (value != null)
             {
-                return identifiers.First(p => p.Value.Equals(identifier)).Key;
+                return key;
             }
 
             var index = (uint)(identifiers.Count + 1);
-            identifiers[index] = identifier;
+            identifiers[index] = new Identifier { Name = name };
             return index;
         }
 
