@@ -26,7 +26,7 @@ namespace SyntaxAnalyzerPDA
             {
                 var tables = LexicalAnalyzer.AnalyzeFile(args[0]);
 
-                var syntaxTree = SyntaxAnalyzer.Analyze(tables.TokenTable);
+                var syntaxTree = SyntaxAnalyzer.Analyze(tables);
                 PrintSyntaxTree(tables, syntaxTree);
             }
             catch (Exception e)

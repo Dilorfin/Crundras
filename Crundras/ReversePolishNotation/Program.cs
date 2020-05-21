@@ -28,13 +28,14 @@ namespace ReversePolishNotation
             {
                 var tables = LexicalAnalyzer.AnalyzeFile(args[0]);
 
-                var syntaxTree = SyntaxAnalyzer.Analyze(tables.TokenTable);
+                var syntaxTree = SyntaxAnalyzer.Analyze(tables);
                 var rpnTokens = RPNTranslator.Analyze(tables, syntaxTree);
                 DisplayRpnTokens(tables, rpnTokens);
 
                 tables.IdentifiersTable.Display();
                 tables.IntLiteralsTable.Display();
                 tables.FloatLiteralsTable.Display();
+                tables.LabelsTable.Display();
 
                 //Console.WriteLine("\nInterpreting:");
                 //new RPNArithmeticInterpreter().Interpret(tokensTable, rpnTokens);
@@ -70,6 +71,7 @@ namespace ReversePolishNotation
                     else
                     {
                         Console.Write($"\"{rpnToken.Name}\"");
+                        Console.Write($" p({tables.LabelsTable[rpnToken.Id.Value].Position})");
                     }
                     Console.Write($" ({rpnToken.Id.Value})");
                 }

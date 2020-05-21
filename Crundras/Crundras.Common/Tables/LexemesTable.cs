@@ -8,43 +8,45 @@ namespace Crundras.Common.Tables
         private static readonly Dictionary<uint, string> CodesTable = new Dictionary<uint, string>
         {
             { 1, "identifier"},
-            { 2, "int_literal"},
-            { 3, "float_literal"},
-            { 4, "int"},
-            { 5, "float"},
-            { 6, "if"},
-            { 7, "for"},
-            { 8, "to"},
-            { 9, "by"},
-            { 10, "while"},
-            { 11, "rof"},
-            { 12, "$"},
-            { 13, "@"},
-            { 14, "="},
-            { 15, "+"},
-            { 16, "-"},
-            { 17, "*"},
-            { 18, "**"},
-            { 19, "/"},
-            { 20, "%"},
-            { 21, "<"},
-            { 22, ">"},
-            { 23, "<="},
-            { 24, "=="},
-            { 25, ">="},
-            { 26, "!="},
-            { 27, "("},
-            { 28, ")"},
-            { 29, "{"},
-            { 30, "}"},
-            { 31, ";"},
-            { 32, "goto"}
+            { 2, "label"},
+            { 3, "int_literal"},
+            { 4, "float_literal"},
+            { 5, "int"},
+            { 6, "float"},
+            { 7, "if"},
+            { 8, "for"},
+            { 9, "to"},
+            { 10, "by"},
+            { 11, "while"},
+            { 12, "rof"},
+            { 13, "goto"},
+            { 14, "$"},
+            { 15, "@"},
+            { 16, "="},
+            { 17, "+"},
+            { 18, "-"},
+            { 19, "*"},
+            { 20, "**"},
+            { 21, "/"},
+            { 22, "%"},
+            { 23, "<"},
+            { 24, ">"},
+            { 25, "<="},
+            { 26, "=="},
+            { 27, ">="},
+            { 28, "!="},
+            { 29, "("},
+            { 30, ")"},
+            { 31, "{"},
+            { 32, "}"},
+            { 33, ";"},
+            { 34, ":"}
         };
 
         public static bool IsKeyword(string lexeme)
         {
             var lexemeId = GetLexemeId(lexeme);
-            return lexemeId >= 4 && lexemeId <= 31;
+            return lexemeId >= 5 && lexemeId <= 34;
         }
 
         public static string GetLexemeName(uint code)

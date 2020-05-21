@@ -5,21 +5,15 @@ using System.Collections.Generic;
 
 namespace ReversePolishNotation
 {
-    public class LabelsTable : Dictionary<uint, uint>
-    {
-    }
-
     public class RPNTranslator
     {
         private readonly Stack<RPNToken> stack = new Stack<RPNToken>();
         private readonly LinkedList<RPNToken> result = new LinkedList<RPNToken>();
         private readonly TablesCollection tables;
-        private readonly LabelsTable labelsTable;
 
         private RPNTranslator(TablesCollection tables)
         {
             this.tables = tables;
-            this.labelsTable = new LabelsTable();
         }
 
         private void ArithmeticExpression(List<SyntaxTreeNode> nodes)
@@ -110,34 +104,45 @@ namespace ReversePolishNotation
 
         private void IfStatement(SyntaxTreeNode node)
         {
-            var labelId = (uint)(labelsTable.Count + 1);
-            result.AddLast(new RPNToken(0, $"LB{labelId}", labelId));
+            var labelId = tables.LabelsTable.GetId($"_LB{tables.LabelsTable.Count + 1}");
+            var label = tables.LabelsTable[labelId];
+            var labelToken = new RPNToken(LexemesTable.GetLexemeId("label"), label.Name, labelId);
+
+            result.AddLast(labelToken);
+
             ArithmeticExpression(node.Children[0].Children);
             result.AddLast(new RPNToken(LexemesTable.GetLexemeId("if")));
             Statement(node.Children[1]);
-            labelsTable[labelId] = (uint)result.Count;
-            result.AddLast(new RPNToken(0, $"LB{labelId}", labelId));
+
+            label.Position = (uint)result.Count;
+            result.AddLast(labelToken);
         }
 
         private void ForStatement(SyntaxTreeNode node)
         {
+            var endLabelId = tables.LabelsTable.GetId($"_LB{tables.LabelsTable.Count + 1}");
+            var endLabel = tables.LabelsTable[endLabelId];
+            var endLabelToken = new RPNToken(LexemesTable.GetLexemeId("label"), endLabel.Name, endLabelId);
+
+            var startLabelId = tables.LabelsTable.GetId($"_LB{tables.LabelsTable.Count + 1}");
+            var startLabelToken = new RPNToken(LexemesTable.GetLexemeId("label"), tables.LabelsTable[startLabelId].Name, startLabelId);
+
             // stm 1
             ArithmeticExpression(node.Children[1].Children);
             result.AddLast(new RPNToken(node.Children[0]));
             result.AddLast(new RPNToken(LexemesTable.GetLexemeId("=")));
 
-            var startLabelId = (uint)(labelsTable.Count + 1);
-            labelsTable[startLabelId] = (uint)result.Count;
-            result.AddLast(new RPNToken(0, $"LB{startLabelId}", startLabelId));
+            // start label
+            tables.LabelsTable[startLabelId].Position = (uint)result.Count;
+            result.AddLast(startLabelToken);
 
-            var endLabelId = (uint)(labelsTable.Count + 1);
             // stm 4
-            result.AddLast(new RPNToken(0, $"LB{endLabelId}", endLabelId));
+            result.AddLast(endLabelToken);
             ArithmeticExpression(node.Children[5].Children);
             result.AddLast(new RPNToken(LexemesTable.GetLexemeId("if")));
 
             // stm 2
-            result.AddLast(new RPNToken(0, $"LB{endLabelId}", endLabelId));
+            result.AddLast(endLabelToken);
             ArithmeticExpression(node.Children[2].Children);
             result.AddLast(new RPNToken(node.Children[0]));
             result.AddLast(new RPNToken(LexemesTable.GetLexemeId("==")));
@@ -153,10 +158,11 @@ namespace ReversePolishNotation
             result.AddLast(new RPNToken(LexemesTable.GetLexemeId("=")));
 
             // goto start
-            result.AddLast(new RPNToken(0, $"LB{startLabelId}", startLabelId));
+            result.AddLast(startLabelToken);
             result.AddLast(new RPNToken(LexemesTable.GetLexemeId("goto")));
             // end
-            result.AddLast(new RPNToken(0, $"LB{endLabelId}", endLabelId));
+            endLabel.Position = (uint)result.Count;
+            result.AddLast(endLabelToken);
         }
 
         private void Statement(SyntaxTreeNode node)
@@ -169,35 +175,45 @@ namespace ReversePolishNotation
                     result.AddLast(new RPNToken(node));
                     result.AddLast(new RPNToken(LexemesTable.GetLexemeId("=")));
                     break;
+                // 'label'
+                case 2:
+                    tables.LabelsTable[node.Id.Value].Position = (uint)result.Count;
+                    result.AddLast(new RPNToken(node));
+                    break;
                 // '$'
-                case 12:
+                case 14:
                     result.AddLast(new RPNToken(node.Children[0]));
                     result.AddLast(new RPNToken(LexemesTable.GetLexemeId("$")));
                     break;
                 // '@'
-                case 13:
+                case 15:
                     ArithmeticExpression(node.Children);
                     result.AddLast(new RPNToken(LexemesTable.GetLexemeId("@")));
                     break;
                 // '{'
-                case 29:
+                case 31:
                     Statements(node);
                     break;
                 // 'if'
-                case 6:
+                case 7:
                     IfStatement(node);
                     break;
                 // 'for'
-                case 7:
+                case 8:
                     ForStatement(node);
                     break;
                 // 'int'
-                case 4:
+                case 5:
                     SetIdentifierType(node.Children[0], 2);
                     break;
                 // 'float'
-                case 5:
+                case 6:
                     SetIdentifierType(node.Children[0], 3);
+                    break;
+                // 'goto'
+                case 13:
+                    result.AddLast(new RPNToken(node.Children[0]));
+                    result.AddLast(new RPNToken(LexemesTable.GetLexemeId("goto")));
                     break;
             }
         }
@@ -207,7 +223,6 @@ namespace ReversePolishNotation
             foreach (var child in node.Children)
             {
                 Statement(child);
-                stack.Clear();
             }
         }
 

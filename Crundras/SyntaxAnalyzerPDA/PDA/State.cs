@@ -95,7 +95,7 @@ namespace SyntaxAnalyzerPDA.PDA
         }
 
         public bool IsError => this.GetType() == typeof(ErrorState);
-        public bool IsLevelStart => new List<int> { 0, 100, 1, 4, 7, 9, 11 }.Contains(Id);
+        public bool IsLevelStart => new List<int> { 0, 100, 1, 4, 7, 9, 11, 13 }.Contains(Id);
         public bool IsFinal { get; }
         public bool TakeToken { get; }
     }

@@ -14,36 +14,22 @@ namespace Crundras.Common.Tables
 
             public override bool Equals(object obj)
             {
-                if (obj is null || obj.GetType() != typeof(Identifier))
+                if (obj is null || !(obj is Identifier identifier)) 
                     return false;
 
-                return (obj as Identifier)?.Name == this.Name;
-            }
-
-            protected bool Equals(Identifier other)
-            {
-                return Name == other.Name;
+                return identifier.Name == this.Name 
+                       && identifier.Type == this.Type;
             }
 
             public override int GetHashCode()
             {
-                return Name.GetHashCode();
+                return HashCode.Combine(Type, Name);
             }
         }
 
         private readonly Dictionary<uint, Identifier> identifiers = new Dictionary<uint, Identifier>();
 
-        public Identifier this[uint index]
-        {
-            get => identifiers.ContainsKey(index) ? identifiers[index] : null;
-            set
-            {
-                if (identifiers.ContainsKey(index))
-                {
-                    identifiers[index] = value;
-                }
-            }
-        }
+        public Identifier this[uint index] => identifiers.ContainsKey(index) ? identifiers[index] : null;
 
         public uint GetId(string name)
         {

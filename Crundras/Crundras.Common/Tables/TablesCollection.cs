@@ -8,6 +8,7 @@ namespace Crundras.Common.Tables
         public FloatLiteralsTable FloatLiteralsTable { get; }
         public IntLiteralsTable IntLiteralsTable { get; }
         public IdentifiersTable IdentifiersTable { get; }
+        public LabelsTable LabelsTable { get; }
 
         public TablesCollection()
         {
@@ -15,6 +16,7 @@ namespace Crundras.Common.Tables
             this.IntLiteralsTable = new IntLiteralsTable();
             this.IdentifiersTable = new IdentifiersTable();
             this.TokenTable = new TokenTable();
+            this.LabelsTable = new LabelsTable();
         }
     }
 }

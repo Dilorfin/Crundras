@@ -119,6 +119,7 @@
                 .ConfigureTransition('{', 1)
                 .ConfigureTransition('}', 1)
                 .ConfigureTransition(';', 1)
+                .ConfigureTransition(':', 1)
                 .ConfigureTransition(1, 2)
                 .ConfigureTransition(2, 4)
                 .ConfigureTransition('=', 8)

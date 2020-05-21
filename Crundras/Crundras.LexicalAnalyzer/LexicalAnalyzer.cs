@@ -111,19 +111,19 @@ namespace Crundras.LexicalAnalyzer
                 // identifiers
                 if (stateId == 3)
                 {
-                    token.Code = 1;
+                    token.Code = LexemesTable.GetLexemeId("identifier");
                     token.ForeignId = Tables.IdentifiersTable.GetId(lexeme);
                 }
                 // int literal
                 else if (stateId == 7)
                 {
-                    token.Code = 2;
+                    token.Code = LexemesTable.GetLexemeId("int_literal");
                     token.ForeignId = Tables.IntLiteralsTable.GetId(lexeme);
                 }
                 // float literal
                 else
                 {
-                    token.Code = 3;
+                    token.Code = LexemesTable.GetLexemeId("float_literal");
                     token.ForeignId = Tables.FloatLiteralsTable.GetId(lexeme);
                 }
             }
