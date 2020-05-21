@@ -70,12 +70,8 @@ namespace SyntaxAnalyzerPDA.PDA
 
         public int Transit(uint tokenType)
         {
-            if (!CanTransit(tokenType))
-            {
-                return otherwise.StateId;
-            }
+            var transitionUnit = CanTransit(tokenType) ? transitions[tokenType] : otherwise;
 
-            var transitionUnit = transitions[tokenType];
             if (transitionUnit.Pop.HasValue)
             {
                 if (stack.Peek() != transitionUnit.Pop.Value)
