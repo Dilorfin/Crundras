@@ -7,9 +7,14 @@ namespace Crundras.Common.Tables.Literals
     {
         protected readonly Dictionary<uint, TValue> Values = new Dictionary<uint, TValue>();
 
-        public TValue this[uint index] => Values[index];
+        public TValue this[uint index]
+        {
+            get => Values[index];
+            set => Values[index] = value;
+        }
 
         public abstract uint GetId(string lexeme);
+        public abstract uint GetId(TValue value);
 
         public void Display()
         {

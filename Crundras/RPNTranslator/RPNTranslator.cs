@@ -3,7 +3,7 @@ using Crundras.Common.Tables;
 using System;
 using System.Collections.Generic;
 
-namespace ReversePolishNotation
+namespace RPNTranslator
 {
     public class RPNTranslator
     {
@@ -112,7 +112,8 @@ namespace ReversePolishNotation
 
             ArithmeticExpression(node.Children[0].Children);
             result.AddLast(new RPNToken(LexemesTable.GetLexemeId("if")));
-            Statement(node.Children[1]);
+
+            Statement(node.Children[1].Children[0]);
 
             label.Position = (uint)result.Count;
             result.AddLast(labelToken);
@@ -139,16 +140,22 @@ namespace ReversePolishNotation
             // stm 4
             result.AddLast(endLabelToken);
             ArithmeticExpression(node.Children[5].Children);
+            var id = tables.IntLiteralsTable.GetId(0);
+            result.AddLast(new RPNToken(LexemesTable.GetLexemeId("int_literal"), "int_literal", id));
+            result.AddLast(new RPNToken(LexemesTable.GetLexemeId("!="), "!="));
             result.AddLast(new RPNToken(LexemesTable.GetLexemeId("if")));
 
             // stm 2
             result.AddLast(endLabelToken);
             ArithmeticExpression(node.Children[2].Children);
             result.AddLast(new RPNToken(node.Children[0]));
-            result.AddLast(new RPNToken(LexemesTable.GetLexemeId("==")));
+            result.AddLast(new RPNToken(LexemesTable.GetLexemeId(">")));
+            id = tables.IntLiteralsTable.GetId(0);
+            result.AddLast(new RPNToken(LexemesTable.GetLexemeId("int_literal"), "int_literal", id));
+            result.AddLast(new RPNToken(LexemesTable.GetLexemeId("!="), "!="));
             result.AddLast(new RPNToken(LexemesTable.GetLexemeId("if")));
 
-            Statement(node.Children[6]);
+            Statement(node.Children[6].Children[0]);
 
             // stm 3
             ArithmeticExpression(node.Children[3].Children);
@@ -204,11 +211,11 @@ namespace ReversePolishNotation
                     break;
                 // 'int'
                 case 5:
-                    SetIdentifierType(node.Children[0], 2);
+                    SetIdentifierType(node.Children[0], LexemesTable.GetLexemeId("int_literal"));
                     break;
                 // 'float'
                 case 6:
-                    SetIdentifierType(node.Children[0], 3);
+                    SetIdentifierType(node.Children[0], LexemesTable.GetLexemeId("float_literal"));
                     break;
                 // 'goto'
                 case 13:

@@ -26,8 +26,6 @@ namespace SyntaxAnalyzerPDA.PDA
 
             states[104] = new State(104, stack)
                 .ConfigureSelfTransition(LexemesTable.GetLexemeId(")"), ')')
-                .ConfigureTransition(15, 103)
-                .ConfigureTransition(16, 103)
                 .ConfigureTransition(17, 103)
                 .ConfigureTransition(18, 103)
                 .ConfigureTransition(19, 103)
@@ -38,6 +36,8 @@ namespace SyntaxAnalyzerPDA.PDA
                 .ConfigureTransition(24, 103)
                 .ConfigureTransition(25, 103)
                 .ConfigureTransition(26, 103)
+                .ConfigureTransition(27, 103)
+                .ConfigureTransition(28, 103)
                 .ConfigureOtherwiseTransition(105);
 
             states[102] = new State(102, stack)

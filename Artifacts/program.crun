@@ -2,7 +2,7 @@ int a;
 float d;
 $d;
 for a=0 to 15/3 by 0.5 while(d<=23)
-    @d / a - d%a;
+    @d+a;
 rof;
 if(d == 23) 
 {

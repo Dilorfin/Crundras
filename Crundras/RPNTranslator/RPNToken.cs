@@ -1,7 +1,7 @@
 ﻿using Crundras.Common;
 using Crundras.Common.Tables;
 
-namespace ReversePolishNotation
+namespace RPNTranslator
 {
     public class RPNToken
     {

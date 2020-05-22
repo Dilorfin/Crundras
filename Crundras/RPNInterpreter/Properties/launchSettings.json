@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "ReversePolishNotation": {
+    "RPNInterpreter": {
       "commandName": "Project",
       "commandLineArgs": "\"../../../../../Artifacts/program.crun\""
     }

@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace ReversePolishNotation
+namespace RPNTranslator
 {
     internal static class Program
     {
@@ -29,7 +29,7 @@ namespace ReversePolishNotation
                 var tables = LexicalAnalyzer.AnalyzeFile(args[0]);
 
                 var syntaxTree = SyntaxAnalyzer.Analyze(tables);
-                var rpnTokens = RPNTranslator.Analyze(tables, syntaxTree);
+                var rpnTokens = global::RPNTranslator.RPNTranslator.Analyze(tables, syntaxTree);
                 DisplayRpnTokens(tables, rpnTokens);
 
                 tables.IdentifiersTable.Display();

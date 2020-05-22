@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SyntaxAnalyzerPDA", "Syntax
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ANTLR", "ANTLR\ANTLR.csproj", "{7BB7612C-0797-4B69-B79D-DA6F1014E4DD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReversePolishNotation", "ReversePolishNotation\ReversePolishNotation.csproj", "{71902BB3-2469-456E-B32E-D820040014A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RPNTranslator", "RPNTranslator\RPNTranslator.csproj", "{71902BB3-2469-456E-B32E-D820040014A5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RPNInterpreter", "RPNInterpreter\RPNInterpreter.csproj", "{C8ADCB46-5F67-4E88-96BE-79054446B91B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{71902BB3-2469-456E-B32E-D820040014A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{71902BB3-2469-456E-B32E-D820040014A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{71902BB3-2469-456E-B32E-D820040014A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8ADCB46-5F67-4E88-96BE-79054446B91B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8ADCB46-5F67-4E88-96BE-79054446B91B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8ADCB46-5F67-4E88-96BE-79054446B91B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8ADCB46-5F67-4E88-96BE-79054446B91B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

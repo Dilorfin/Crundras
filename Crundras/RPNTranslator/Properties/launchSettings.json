@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "RPNTranslator": {
+      "commandName": "Project",
+      "commandLineArgs": "\"../../../../../Artifacts/program.crun\""
+    }
+  }
+}

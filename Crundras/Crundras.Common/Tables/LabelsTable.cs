@@ -25,9 +25,9 @@ namespace Crundras.Common.Tables
             {
                 return label.Key;
             }
-            
+
             var index = (uint)(labels.Count + 1);
-            labels[index] = new Label {Name = lexeme};
+            labels[index] = new Label { Name = lexeme };
             return index;
         }
 

@@ -7,9 +7,11 @@ namespace Crundras.Common.Tables.Literals
     {
         public override uint GetId(string lexeme)
         {
-            if (!float.TryParse(lexeme, out float value))
-                return 0;
+            return float.TryParse(lexeme, out float value) ? GetId(value) : 0;
+        }
 
+        public override uint GetId(float value)
+        {
             if (Values.ContainsValue(value))
             {
                 return Values.First(

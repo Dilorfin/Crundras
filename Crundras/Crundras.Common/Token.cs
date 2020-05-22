@@ -37,5 +37,9 @@
         {
             return IsLiteral(code) || IsIdentifier(code);
         }
+        public static bool IsLabel(uint code)
+        {
+            return code == 2;
+        }
     }
 }

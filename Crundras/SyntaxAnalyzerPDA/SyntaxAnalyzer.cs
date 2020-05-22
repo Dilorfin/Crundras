@@ -3,7 +3,6 @@ using Crundras.Common.Tables;
 using SyntaxAnalyzerPDA.PDA;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace SyntaxAnalyzerPDA
 {
@@ -58,7 +57,7 @@ namespace SyntaxAnalyzerPDA
 
                 // delicate balancing bugs
                 if ((stateMachine.CurrentState.Id == 11
-                    && tokenListNode.Next != null 
+                    && tokenListNode.Next != null
                     && tokenListNode.Next.Value.Code == LexemesTable.GetLexemeId(":"))
                     || stateMachine.CurrentState.Id == 8)
                 {
