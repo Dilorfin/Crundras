@@ -144,7 +144,7 @@ namespace SyntaxAnalyzerPDA.PDA
                 .ConfigureTransition(LexemesTable.GetLexemeId("identifier"), 2);
 
             // root
-            states[0] = new State(0, stack)
+            states[43] = new State(43, stack, false, false)
                 .ConfigureTransition(LexemesTable.GetLexemeId("int"), 1)
                 .ConfigureTransition(LexemesTable.GetLexemeId("float"), 1)
                 .ConfigureTransition(LexemesTable.GetLexemeId("$"), 4)
@@ -153,8 +153,14 @@ namespace SyntaxAnalyzerPDA.PDA
                 .ConfigureTransition(LexemesTable.GetLexemeId("identifier"), 11)
                 .ConfigureTransition(LexemesTable.GetLexemeId("if"), 9)
                 .ConfigureTransition(LexemesTable.GetLexemeId("for"), 13)
+                .ConfigureTransition(LexemesTable.GetLexemeId("{"), 0, null, 42);
+
+            states[42] = new State(42, stack)
                 .ConfigureTransition(LexemesTable.GetLexemeId("}"), 3)
-                .ConfigureSelfTransition(LexemesTable.GetLexemeId("{"));
+                .ConfigureOtherwiseTransition(43, null, 42);
+            
+            states[0] = new State(0, stack)
+                .ConfigureOtherwiseTransition(43);
 
             #endregion
 
