@@ -104,19 +104,19 @@ namespace RPNTranslator
 
         private void IfStatement(SyntaxTreeNode node)
         {
-            var labelId = tables.LabelsTable.GetId($"_LB{tables.LabelsTable.Count + 1}");
-            var label = tables.LabelsTable[labelId];
-            var labelToken = new RPNToken(LexemesTable.GetLexemeId("label"), label.Name, labelId);
+            var endLabelId = tables.LabelsTable.GetId($"_LB{tables.LabelsTable.Count + 1}");
+            var endLabel = tables.LabelsTable[endLabelId];
+            var endLabelToken = new RPNToken(LexemesTable.GetLexemeId("label"), endLabel.Name, endLabelId);
 
-            result.AddLast(labelToken);
+            result.AddLast(endLabelToken);
 
             ArithmeticExpression(node.Children[0].Children);
             result.AddLast(new RPNToken(LexemesTable.GetLexemeId("if")));
 
-            Statement(node.Children[1].Children[0]);
+            Statement(node.Children[1]);
 
-            label.Position = (uint)result.Count;
-            result.AddLast(labelToken);
+            endLabel.Position = (uint)result.Count;
+            result.AddLast(endLabelToken);
         }
 
         private void ForStatement(SyntaxTreeNode node)
@@ -128,40 +128,41 @@ namespace RPNTranslator
             var startLabelId = tables.LabelsTable.GetId($"_LB{tables.LabelsTable.Count + 1}");
             var startLabelToken = new RPNToken(LexemesTable.GetLexemeId("label"), tables.LabelsTable[startLabelId].Name, startLabelId);
 
-            // stm 1
-            ArithmeticExpression(node.Children[1].Children);
-            result.AddLast(new RPNToken(node.Children[0]));
-            result.AddLast(new RPNToken(LexemesTable.GetLexemeId("=")));
+            // stm 1 (assign)
+            Assign(node.Children[0]);
+
+            var iterationVariable = node.Children[0].Children[0];
 
             // start label
             tables.LabelsTable[startLabelId].Position = (uint)result.Count;
             result.AddLast(startLabelToken);
 
-            // stm 4
+            // stm 4 (while)
             result.AddLast(endLabelToken);
-            ArithmeticExpression(node.Children[5].Children);
+            ArithmeticExpression(node.Children[3].Children[0].Children);
             var id = tables.IntLiteralsTable.GetId(0);
             result.AddLast(new RPNToken(LexemesTable.GetLexemeId("int_literal"), "int_literal", id));
             result.AddLast(new RPNToken(LexemesTable.GetLexemeId("!="), "!="));
             result.AddLast(new RPNToken(LexemesTable.GetLexemeId("if")));
 
-            // stm 2
-            result.AddLast(endLabelToken);
-            ArithmeticExpression(node.Children[2].Children);
-            result.AddLast(new RPNToken(node.Children[0]));
+            // stm 2 (to)
+            result.AddLast(endLabelToken); // goto end
+            ArithmeticExpression(node.Children[1].Children[0].Children);
+            result.AddLast(new RPNToken(iterationVariable));
             result.AddLast(new RPNToken(LexemesTable.GetLexemeId(">")));
             id = tables.IntLiteralsTable.GetId(0);
             result.AddLast(new RPNToken(LexemesTable.GetLexemeId("int_literal"), "int_literal", id));
             result.AddLast(new RPNToken(LexemesTable.GetLexemeId("!="), "!="));
             result.AddLast(new RPNToken(LexemesTable.GetLexemeId("if")));
 
-            Statement(node.Children[6].Children[0]);
+            // body
+            Statement(node.Children[4]);
 
-            // stm 3
-            ArithmeticExpression(node.Children[3].Children);
-            result.AddLast(new RPNToken(node.Children[0]));
+            // stm 3 (by - iteration) 
+            ArithmeticExpression(node.Children[3].Children[0].Children);
+            result.AddLast(new RPNToken(iterationVariable));
             result.AddLast(new RPNToken(LexemesTable.GetLexemeId("+")));
-            result.AddLast(new RPNToken(node.Children[0]));
+            result.AddLast(new RPNToken(iterationVariable));
             result.AddLast(new RPNToken(LexemesTable.GetLexemeId("=")));
 
             // goto start
@@ -172,15 +173,20 @@ namespace RPNTranslator
             result.AddLast(endLabelToken);
         }
 
+        private void Assign(SyntaxTreeNode node)
+        {
+            ArithmeticExpression(node.Children[1].Children);
+            result.AddLast(new RPNToken(node.Children[0]));
+            result.AddLast(new RPNToken(node));
+        }
+
         private void Statement(SyntaxTreeNode node)
         {
             switch (node.LexemeCode)
             {
-                // 'identifier'
-                case 1:
-                    ArithmeticExpression(node.Children[0].Children);
-                    result.AddLast(new RPNToken(node));
-                    result.AddLast(new RPNToken(LexemesTable.GetLexemeId("=")));
+                // '='
+                case 16:
+                    Assign(node);
                     break;
                 // 'label'
                 case 2:
@@ -194,8 +200,8 @@ namespace RPNTranslator
                     break;
                 // '@'
                 case 15:
-                    ArithmeticExpression(node.Children);
-                    result.AddLast(new RPNToken(LexemesTable.GetLexemeId("@")));
+                    ArithmeticExpression(node.Children[0].Children);
+                    result.AddLast(new RPNToken(node));
                     break;
                 // '{'
                 case 31:
@@ -220,7 +226,7 @@ namespace RPNTranslator
                 // 'goto'
                 case 13:
                     result.AddLast(new RPNToken(node.Children[0]));
-                    result.AddLast(new RPNToken(LexemesTable.GetLexemeId("goto")));
+                    result.AddLast(new RPNToken(node));
                     break;
             }
         }

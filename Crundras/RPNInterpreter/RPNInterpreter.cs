@@ -208,7 +208,12 @@ namespace RPNInterpreter
 
                         if (Token.IsIdentifier(a.LexemeCode))
                         {
-                            firstValue = double.Parse(tables.IdentifiersTable[a.Id.Value].Value);
+                            var value = tables.IdentifiersTable[a.Id.Value].Value;
+                            if (string.IsNullOrWhiteSpace(value))
+                            {
+                                throw new Exception($"Undefined variable: '{tables.IdentifiersTable[a.Id.Value].Name}'.");
+                            }
+                            firstValue = double.Parse(value);
                             firstType = tables.IdentifiersTable[a.Id.Value].Type;
                         }
                         else if (Token.IsIntLiteral(a.LexemeCode))
@@ -224,7 +229,12 @@ namespace RPNInterpreter
 
                         if (Token.IsIdentifier(b.LexemeCode))
                         {
-                            secondValue = double.Parse(tables.IdentifiersTable[b.Id.Value].Value);
+                            var value = tables.IdentifiersTable[b.Id.Value].Value;
+                            if (string.IsNullOrWhiteSpace(value))
+                            {
+                                throw new Exception($"Undefined variable: '{tables.IdentifiersTable[b.Id.Value].Name}'.");
+                            }
+                            secondValue = double.Parse(value);
                             secondType = tables.IdentifiersTable[b.Id.Value].Type;
                         }
                         else if (Token.IsIntLiteral(b.LexemeCode))
