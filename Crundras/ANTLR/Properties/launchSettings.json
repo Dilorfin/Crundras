@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "ANTLR": {
-      "commandName": "Project",
-      "commandLineArgs": "\"../../../../../Artifacts/program.crun\""
-    }
-  }
-}

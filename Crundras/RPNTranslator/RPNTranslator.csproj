@@ -7,7 +7,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Crundras.LexicalAnalyzer\Crundras.LexicalAnalyzer.csproj" />
-    <ProjectReference Include="..\SyntaxAnalyzerPDA\SyntaxAnalyzerPDA.csproj" />
+    <ProjectReference Include="..\Crundras.SyntaxAnalyzerPDA\Crundras.SyntaxAnalyzerPDA.csproj" />
   </ItemGroup>
 
 </Project>

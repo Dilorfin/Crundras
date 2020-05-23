@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "Recursive descent parser": {
-      "commandName": "Project",
-      "commandLineArgs": "\"../../../../../Artifacts/program.crun\""
-    }
-  }
-}

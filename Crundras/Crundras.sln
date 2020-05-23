@@ -7,15 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Crundras.Common", "Crundras
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Crundras.LexicalAnalyzer", "Crundras.LexicalAnalyzer\Crundras.LexicalAnalyzer.csproj", "{728A2A37-1EF5-43B0-8E04-BB42C5E20F1C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecursiveDescentParser", "RecursiveDescentParser\RecursiveDescentParser.csproj", "{3A805892-924C-464F-AA22-6854BC3F9F9F}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SyntaxAnalyzerPDA", "SyntaxAnalyzerPDA\SyntaxAnalyzerPDA.csproj", "{8C80849B-2A52-4925-9CF7-4DD36263B05E}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ANTLR", "ANTLR\ANTLR.csproj", "{7BB7612C-0797-4B69-B79D-DA6F1014E4DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Crundras.SyntaxAnalyzerPDA", "Crundras.SyntaxAnalyzerPDA\Crundras.SyntaxAnalyzerPDA.csproj", "{8C80849B-2A52-4925-9CF7-4DD36263B05E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RPNTranslator", "RPNTranslator\RPNTranslator.csproj", "{71902BB3-2469-456E-B32E-D820040014A5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RPNInterpreter", "RPNInterpreter\RPNInterpreter.csproj", "{C8ADCB46-5F67-4E88-96BE-79054446B91B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RPNInterpreter", "RPNInterpreter\RPNInterpreter.csproj", "{C8ADCB46-5F67-4E88-96BE-79054446B91B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,18 +27,10 @@ Global
 		{728A2A37-1EF5-43B0-8E04-BB42C5E20F1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{728A2A37-1EF5-43B0-8E04-BB42C5E20F1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{728A2A37-1EF5-43B0-8E04-BB42C5E20F1C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3A805892-924C-464F-AA22-6854BC3F9F9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3A805892-924C-464F-AA22-6854BC3F9F9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3A805892-924C-464F-AA22-6854BC3F9F9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3A805892-924C-464F-AA22-6854BC3F9F9F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8C80849B-2A52-4925-9CF7-4DD36263B05E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8C80849B-2A52-4925-9CF7-4DD36263B05E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8C80849B-2A52-4925-9CF7-4DD36263B05E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8C80849B-2A52-4925-9CF7-4DD36263B05E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7BB7612C-0797-4B69-B79D-DA6F1014E4DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7BB7612C-0797-4B69-B79D-DA6F1014E4DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7BB7612C-0797-4B69-B79D-DA6F1014E4DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7BB7612C-0797-4B69-B79D-DA6F1014E4DD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{71902BB3-2469-456E-B32E-D820040014A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{71902BB3-2469-456E-B32E-D820040014A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{71902BB3-2469-456E-B32E-D820040014A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
