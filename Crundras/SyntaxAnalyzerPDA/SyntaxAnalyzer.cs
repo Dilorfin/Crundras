@@ -38,15 +38,6 @@ namespace SyntaxAnalyzerPDA
         {
             while (tokenListNode != null)
             {
-                AnalyzeToken();
-            }
-
-        }
-
-        public void AnalyzeToken()
-        {
-            do
-            {
                 stateMachine.NextState(tokenListNode.Value.Code);
 
                 if (stateMachine.CurrentState.IsError)
@@ -55,10 +46,8 @@ namespace SyntaxAnalyzerPDA
                     throw new Exception(message);
                 }
 
-                // delicate balancing bugs
                 if ((stateMachine.CurrentState.Id == 11
-                    && tokenListNode.Next != null
-                    && tokenListNode.Next.Value.Code == LexemesTable.GetLexemeId(":"))
+                     && tokenListNode?.Next?.Value.Code == LexemesTable.GetLexemeId(":")) 
                     || stateMachine.CurrentState.Id == 8)
                 {
                     var value = tokenListNode.Value;
@@ -71,28 +60,88 @@ namespace SyntaxAnalyzerPDA
                     tokenListNode.Value = value;
                 }
 
-                var child = new SyntaxTreeNode(tokenListNode.Value);
+                SyntaxTreeBuilder();
 
                 if (stateMachine.CurrentState.TakeToken)
                 {
-                    CurrentTreeNode.AddChild(child);
-
-                    if (stateMachine.CurrentState.IsLevelStart)
-                    {
-                        CurrentTreeNode = child;
-                    }
+                    tokenListNode = tokenListNode.Next;
                 }
-
-                if (stateMachine.CurrentState.IsFinal
-                    && CurrentTreeNode.Parent != null)
+            }
+        }
+        
+        public void SyntaxTreeBuilder()
+        {
+            if (stateMachine.CurrentState.Id == 105)
+            {
+                CurrentTreeNode = CurrentTreeNode.Parent;
+                if (CurrentTreeNode.LexemeCode != LexemesTable.GetLexemeId("if"))
                 {
                     CurrentTreeNode = CurrentTreeNode.Parent;
                 }
+            }
 
+            if (CurrentTreeNode.LexemeCode == LexemesTable.GetLexemeId("if")
+                && CurrentTreeNode.Children?.Count == 2)
+            {
+                CurrentTreeNode = CurrentTreeNode.Parent;
+            }
 
-            } while (!stateMachine.CurrentState.TakeToken);
+            if (!stateMachine.CurrentState.TakeToken)
+            {
+                return;
+            }
 
-            tokenListNode = tokenListNode.Next;
+            if (tokenListNode.Value.Code == LexemesTable.GetLexemeId(":"))
+            {
+                CurrentTreeNode.AddChild(new SyntaxTreeNode(tokenListNode.Previous.Value));
+            }
+            else if (tokenListNode.Value.Code == LexemesTable.GetLexemeId("="))
+            {
+                CurrentTreeNode.AddChild(new SyntaxTreeNode(tokenListNode.Value));
+                CurrentTreeNode = CurrentTreeNode.Children[^1];
+                CurrentTreeNode.AddChild(new SyntaxTreeNode(tokenListNode.Previous.Value));
+            }
+            else if (new List<uint> {
+                    LexemesTable.GetLexemeId("if"),
+                    LexemesTable.GetLexemeId("{"),
+                    LexemesTable.GetLexemeId("@"),
+                    LexemesTable.GetLexemeId("for"),
+                    LexemesTable.GetLexemeId("to"),
+                    LexemesTable.GetLexemeId("by"),
+                    LexemesTable.GetLexemeId("while")
+                }.Contains(tokenListNode.Value.Code))
+            {
+                CurrentTreeNode.AddChild(new SyntaxTreeNode(tokenListNode.Value));
+                CurrentTreeNode = CurrentTreeNode.Children[^1];
+            }
+            else if (tokenListNode.Value.Code == LexemesTable.GetLexemeId("}"))
+            {
+                CurrentTreeNode = CurrentTreeNode.Parent;
+            }
+            else if (tokenListNode.Value.Code == LexemesTable.GetLexemeId("rof"))
+            {
+                CurrentTreeNode = CurrentTreeNode.Parent;
+            }
+
+            if (new List<int>{ 1, 4, 7 }.Contains(stateMachine.CurrentState.Id))
+            {
+                CurrentTreeNode.AddChild(new SyntaxTreeNode(tokenListNode.Value));
+                CurrentTreeNode = CurrentTreeNode.Children[^1];
+            }
+            else if (new List<int>{ 2, 5, 8 }.Contains(stateMachine.CurrentState.Id))
+            {
+                CurrentTreeNode.AddChild(new SyntaxTreeNode(tokenListNode.Value));
+                CurrentTreeNode = CurrentTreeNode.Parent;
+            }
+            else if (stateMachine.CurrentState.Id == 100)
+            {
+                CurrentTreeNode.AddChild(new SyntaxTreeNode(100));
+                CurrentTreeNode = CurrentTreeNode.Children[^1];
+            }
+            else if (stateMachine.CurrentState.Id > 100)
+            {
+                CurrentTreeNode.AddChild(new SyntaxTreeNode(tokenListNode.Value));
+            }
         }
     }
 }

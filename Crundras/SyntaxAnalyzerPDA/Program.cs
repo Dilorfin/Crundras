@@ -44,7 +44,11 @@ namespace SyntaxAnalyzerPDA
                 return;
             }
 
-            if (node.LexemeCode != uint.MaxValue)
+            if (node.LexemeCode == 100)
+            {
+                Console.WriteLine($"{new string('-', level)} expr ");
+            }
+            else if (node.LexemeCode != uint.MaxValue)
             {
                 Console.Write($"{new string('-', level)} {LexemesTable.GetLexemeName(node.LexemeCode)} ");
                 if (node.Id.HasValue)

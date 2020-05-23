@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace SyntaxAnalyzerPDA.PDA
 {
@@ -72,6 +73,14 @@ namespace SyntaxAnalyzerPDA.PDA
         {
             var transitionUnit = CanTransit(tokenType) ? transitions[tokenType] : otherwise;
 
+#if DEBUG
+            if (transitionUnit is null)
+            {
+                throw new Exception($"Unconfigured transaction. State: {Id}. " +
+                                    $"Token: {Crundras.Common.Tables.LexemesTable.GetLexemeName(tokenType)}");
+            }
+#endif
+
             if (transitionUnit.Pop.HasValue)
             {
                 if (stack.Peek() != transitionUnit.Pop.Value)
@@ -95,7 +104,6 @@ namespace SyntaxAnalyzerPDA.PDA
         }
 
         public bool IsError => this.GetType() == typeof(ErrorState);
-        public bool IsLevelStart => new List<int> { 0, 100, 1, 4, 7, 9, 11, 13 }.Contains(Id);
         public bool IsFinal { get; }
         public bool TakeToken { get; }
     }
