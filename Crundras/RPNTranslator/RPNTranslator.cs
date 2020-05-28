@@ -7,7 +7,7 @@ namespace RPNTranslator
 {
     public class RPNTranslator
     {
-        private readonly Stack<RPNToken> stack = new Stack<RPNToken>();
+        
         private readonly LinkedList<RPNToken> result = new LinkedList<RPNToken>();
         private readonly TablesCollection tables;
 
@@ -20,6 +20,7 @@ namespace RPNTranslator
         {
             if (nodes.Count == 0) return;
 
+            var stack = new Stack<RPNToken>();
             var priorityTable = new Dictionary<string, int>
             {
                 { "(", 0 },
@@ -35,8 +36,8 @@ namespace RPNTranslator
                 { "*", 3 },
                 { "/", 3 },
                 { "%", 3 },
-                { "NEG", 4 },
-                { "**", 5 }
+                { "**", 3 },
+                { "NEG", 4 }
             };
 
             for (int i = 0; i < nodes.Count; i++)
