@@ -33,7 +33,7 @@ namespace Crundras.Common.Tables
 
         public void Display()
         {
-            Console.WriteLine("Identifiers table:");
+            Console.WriteLine("Labels table:");
             foreach (var (key, value) in labels)
             {
                 Console.WriteLine($"{key,3}{value.Name,15}{value.Position,3}");

@@ -27,7 +27,6 @@ namespace RPNInterpreter
 
                 var syntaxTree = SyntaxAnalyzer.Analyze(tables);
                 var rpnTokens = RPNTranslator.RPNTranslator.Analyze(tables, syntaxTree);
-                //DisplayRpnTokens(tables, rpnTokens);
 
                 Console.WriteLine("Interpreting:");
                 new RPNInterpreter().Interpret(tables, rpnTokens);
