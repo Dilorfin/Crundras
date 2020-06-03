@@ -43,7 +43,7 @@ namespace RPNInterpreter
                         }
                         else if (Token.IsFloatLiteral(rpnToken.LexemeCode))
                         {
-                            Console.WriteLine(tables.FloatLiteralsTable[rpnToken.Id.Value]);
+                            Console.WriteLine($"{tables.FloatLiteralsTable[rpnToken.Id.Value]:F2}");
                         }
                     }
                     else if (token.LexemeCode == LexemesTable.GetLexemeId("$"))
@@ -57,15 +57,21 @@ namespace RPNInterpreter
 
                         var inputLine = Console.ReadLine();
 
-                        if (Token.IsFloatLiteral(tables.IdentifiersTable[identToken.Id.Value].Type)
-                            && !float.TryParse(inputLine, out _))
+                        if (Token.IsFloatLiteral(tables.IdentifiersTable[identToken.Id.Value].Type))
                         {
-                            throw new Exception("");
+                            if (float.TryParse(inputLine, out var res))
+                            {
+                                inputLine = res.ToString();
+                            }
+                            else throw new Exception("Input type error");
                         }
-                        if (Token.IsIntLiteral(tables.IdentifiersTable[identToken.Id.Value].Type)
-                                 && !int.TryParse(inputLine, out _))
+                        else if (Token.IsIntLiteral(tables.IdentifiersTable[identToken.Id.Value].Type))
                         {
-                            throw new Exception("");
+                            if (int.TryParse(inputLine, out var res))
+                            {
+                                inputLine = res.ToString();
+                            }
+                            else throw new Exception("Input type error");
                         }
                         tables.IdentifiersTable[identToken.Id.Value].Value = inputLine;
                         stack.Push(identToken);
@@ -253,6 +259,7 @@ namespace RPNInterpreter
                             throw new Exception("");
                         }
 
+                        uint resultType = Math.Max(firstType, secondType);
                         double resultValue = 0;
                         switch (token.LexemeCode)
                         {
@@ -267,34 +274,42 @@ namespace RPNInterpreter
                                 break;
                             case 20:  // **
                                 resultValue = Math.Pow(secondValue, firstValue);
+                                resultType = LexemesTable.GetLexemeId("float_literal");
                                 break;
                             case 21:  // /
                                 resultValue = secondValue / firstValue;
+                                resultType = LexemesTable.GetLexemeId("float_literal");
+                                if (Math.Abs(firstValue) < double.Epsilon) throw new Exception("Error: division by 0.");
                                 break;
                             case 22:  // %
                                 resultValue = secondValue % firstValue;
+                                resultType = LexemesTable.GetLexemeId("int_literal");
                                 break;
                             case 23:  // <
                                 resultValue = secondValue < firstValue ? 1 : 0;
+                                resultType = LexemesTable.GetLexemeId("int_literal");
                                 break;
                             case 24:  // >
                                 resultValue = secondValue > firstValue ? 1 : 0;
+                                resultType = LexemesTable.GetLexemeId("int_literal");
                                 break;
                             case 25:  // <=
                                 resultValue = secondValue <= firstValue ? 1 : 0;
+                                resultType = LexemesTable.GetLexemeId("int_literal");
                                 break;
                             case 26:  // ==
                                 resultValue = Math.Abs(firstValue - secondValue) < double.Epsilon ? 1 : 0;
+                                resultType = LexemesTable.GetLexemeId("int_literal");
                                 break;
                             case 27:  // >=
                                 resultValue = secondValue >= firstValue ? 1 : 0;
+                                resultType = LexemesTable.GetLexemeId("int_literal");
                                 break;
                             case 28:  // !=
                                 resultValue = Math.Abs(firstValue - secondValue) > double.Epsilon ? 1 : 0;
+                                resultType = LexemesTable.GetLexemeId("int_literal");
                                 break;
                         }
-
-                        uint resultType = Math.Max(firstType, secondType);
 
                         uint id;
                         if (Token.IsIntLiteral(resultType))
