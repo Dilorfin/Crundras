@@ -48,16 +48,22 @@ namespace RPNInterpreter
                     }
                     else if (token.LexemeCode == LexemesTable.GetLexemeId("$"))
                     {
-                        Console.Write("Input: ");
                         var identToken = stack.Pop();
                         if (!identToken.Id.HasValue || !Token.IsIdentifier(identToken.LexemeCode))
                         {
-                            throw new Exception("");
+                            throw new Exception("Expected variable");
                         }
 
+                        var identType = tables.IdentifiersTable[identToken.Id.Value].Type;
+                        if (identType == 0)
+                        {
+                            throw new Exception($"Undeclared variable \"{tables.IdentifiersTable[identToken.Id.Value].Name}\".");
+                        }
+                        
+                        Console.Write("Input: ");
                         var inputLine = Console.ReadLine();
 
-                        if (Token.IsFloatLiteral(tables.IdentifiersTable[identToken.Id.Value].Type))
+                        if (Token.IsFloatLiteral(identType))
                         {
                             if (float.TryParse(inputLine, out var res))
                             {
@@ -65,7 +71,7 @@ namespace RPNInterpreter
                             }
                             else throw new Exception("Input type error");
                         }
-                        else if (Token.IsIntLiteral(tables.IdentifiersTable[identToken.Id.Value].Type))
+                        else if (Token.IsIntLiteral(identType))
                         {
                             if (int.TryParse(inputLine, out var res))
                             {
@@ -88,17 +94,17 @@ namespace RPNInterpreter
                     }
                     else if (token.LexemeCode == LexemesTable.GetLexemeId("if"))
                     {
+                        var labelToken = stack.Pop();
+                        if (!labelToken.Id.HasValue || !Token.IsLabel(labelToken.LexemeCode))
+                        {
+                            throw new Exception($"Expected label but got '{LexemesTable.GetLexemeName(labelToken.LexemeCode)}'");
+                        }
+
                         var valueToken = stack.Pop();
                         if (!valueToken.Id.HasValue ||
                             (!Token.IsLiteral(valueToken.LexemeCode) && !Token.IsIdentifier(valueToken.LexemeCode)))
                         {
                             throw new Exception($"Expected literal or identifier but got '{LexemesTable.GetLexemeName(valueToken.LexemeCode)}'");
-                        }
-
-                        var labelToken = stack.Pop();
-                        if (!labelToken.Id.HasValue || !Token.IsLabel(labelToken.LexemeCode))
-                        {
-                            throw new Exception($"Expected label but got '{LexemesTable.GetLexemeName(labelToken.LexemeCode)}'");
                         }
 
                         bool value = false;
@@ -158,22 +164,6 @@ namespace RPNInterpreter
                     }
                     else if (token.Name == "=")
                     {
-                        var identToken = stack.Pop();
-                        if (!Token.IsIdentifier(identToken.LexemeCode))
-                        {
-                            throw new Exception("");
-                        }
-                        if (!identToken.Id.HasValue)
-                        {
-                            throw new Exception("");
-                        }
-
-                        var type = tables.IdentifiersTable[identToken.Id.Value].Type;
-                        if (type == 0)
-                        {
-                            throw new Exception($"Undefined variable: '{tables.IdentifiersTable[identToken.Id.Value].Name}'.");
-                        }
-
                         var valueToken = stack.Pop();
 
                         string value;
@@ -188,10 +178,30 @@ namespace RPNInterpreter
                         else if (Token.IsIdentifier(valueToken.LexemeCode))
                         {
                             value = tables.IdentifiersTable[valueToken.Id.Value].Value;
+                            if (tables.IdentifiersTable[valueToken.Id.Value].Type == 0)
+                            {
+                                throw new Exception($"Undeclared variable \"{tables.IdentifiersTable[valueToken.Id.Value].Name}\".");
+                            }
                         }
                         else
                         {
                             throw new Exception("");
+                        }
+
+                        var identToken = stack.Pop();
+                        if (!Token.IsIdentifier(identToken.LexemeCode))
+                        {
+                            throw new Exception("");
+                        }
+                        if (!identToken.Id.HasValue)
+                        {
+                            throw new Exception("");
+                        }
+
+                        var type = tables.IdentifiersTable[identToken.Id.Value].Type;
+                        if (type == 0)
+                        {
+                            throw new Exception($"Undefined variable: '{tables.IdentifiersTable[identToken.Id.Value].Name}'.");
                         }
 
                         tables.IdentifiersTable[identToken.Id.Value].Value = value;
