@@ -30,6 +30,11 @@ namespace RPNInterpreter
 
                 Console.WriteLine("Interpreting:");
                 new RPNInterpreter().Interpret(tables, rpnTokens);
+
+                tables.IdentifiersTable.Display();
+                tables.IntLiteralsTable.Display();
+                tables.FloatLiteralsTable.Display();
+                tables.LabelsTable.Display();
             }
             catch (Exception e)
             {

@@ -1,7 +1,7 @@
 _Program = {Statement}.
 
-Statement = InputStatement | OutputStatement | CompoundStatement | SelectionStatement | IterationStatement | DeclarationStatement | AssignmentStatement | JumpStatement | LabelStatement.
-SelectionStatement = "if" '(' Expression ')' Statement.
+Statement = InputStatement | OutputStatement | CompoundStatement | ConditionStatement | IterationStatement | DeclarationStatement | AssignmentStatement | JumpStatement | LabelStatement.
+ConditionStatement = "if" '(' Expression ')' Statement.
 IterationStatement = "for" AssignmentExpression "to" Expression "by" Expression "while" '(' Expression ')' Statement "rof" ';'.
 CompoundStatement = '{' {Statement} '}'.
 DeclarationStatement = TypeSpecifier Identifier ';'.

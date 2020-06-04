@@ -36,7 +36,7 @@ namespace Crundras.Common.Tables
             Console.WriteLine("Labels table:");
             foreach (var (key, value) in labels)
             {
-                Console.WriteLine($"{key,3}{value.Name,15}{value.Position,3}");
+                Console.WriteLine($"{key,3}{value.Name,15}{value.Position,4}");
             }
             Console.WriteLine();
         }

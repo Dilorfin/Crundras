@@ -153,7 +153,7 @@ namespace SyntaxAnalyzerPDA.PDA
                 .ConfigureTransition(LexemesTable.GetLexemeId("identifier"), 11)
                 .ConfigureTransition(LexemesTable.GetLexemeId("if"), 9)
                 .ConfigureTransition(LexemesTable.GetLexemeId("for"), 13)
-                .ConfigureTransition(LexemesTable.GetLexemeId("{"), 0, null, 42);
+                .ConfigureTransition(LexemesTable.GetLexemeId("{"), 42);
 
             states[42] = new State(42, stack)
                 .ConfigureTransition(LexemesTable.GetLexemeId("}"), 3)

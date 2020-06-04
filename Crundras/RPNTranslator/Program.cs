@@ -36,9 +36,6 @@ namespace RPNTranslator
                 tables.IntLiteralsTable.Display();
                 tables.FloatLiteralsTable.Display();
                 tables.LabelsTable.Display();
-
-                //Console.WriteLine("\nInterpreting:");
-                //new RPNArithmeticInterpreter().Interpret(tokensTable, rpnTokens);
             }
             catch (Exception e)
             {
